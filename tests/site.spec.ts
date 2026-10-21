@@ -143,6 +143,8 @@ test.describe('theme', () => {
 
 test.describe('hero', () => {
   test('scrolling steps through the four services', async ({ page }) => {
+    // The steps don't depend on the live 3D, and compiling it without a GPU (CI) stalls the page for seconds.
+    await page.route(/hero-3d|stage\./, (r) => r.abort());
     await page.goto('/en/');
     const on = page.locator('.step.on');
     await expect(on.locator('h1')).toBeVisible();
