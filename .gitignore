@@ -1,0 +1,8 @@
+node_modules/
+dist/
+.astro/
+test-results/
+playwright-report/
+
+# Zodiak (ITF Free Font License: self-hosting allowed, redistribution not). Fetched by scripts/fonts.mjs.
+src/assets/fonts/zodiak-*.woff2

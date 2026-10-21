@@ -1,0 +1,350 @@
+---
+/**
+ * Stacking project cards: each one slides up over the last. Hovering a card plays its
+ * screenshots and a "View" bubble follows the pointer.
+ */
+import { Image } from 'astro:assets';
+import { projects } from '../data/projects';
+import { render, shot } from '../lib/assets';
+import { pick, type Lang } from '../i18n/lang';
+import { casePath, ui } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+---
+
+<section class="work" id="work" aria-labelledby="work-title">
+  <div class="wrap">
+    <h2 class="title work-title" id="work-title">{pick(ui.work.title, lang)}</h2>
+  </div>
+  <ol class="cards wrap">
+    {
+      projects.map((p, i) => {
+        const cover = render(p.cover.file);
+        return (
+          <li class="slot" style={`--i:${i}`}>
+            <article class="card" style={`--tone:${p.tone};--accent:${p.accent};view-transition-name:tone-${p.id}`} data-card>
+              <div class="card-text">
+                <p class="card-sector">
+                  {pick(p.sector, lang) + (p.client !== p.name ? `, ${p.client}` : '')}
+                </p>
+                <h3 class="card-name">
+                  <a class="card-link" href={casePath(lang, p.id)}>
+                    {p.name}
+                  </a>
+                </h3>
+                <p class="card-result">{pick(p.result, lang)}</p>
+                <ul class="tags">
+                  {p.services.map((s) => (
+                    <li>{pick(s, lang)}</li>
+                  ))}
+                  {p.status && <li class="status">{pick(p.status, lang)}</li>}
+                </ul>
+                <span class="card-cta" aria-hidden="true">
+                  {pick(ui.work.open, lang)}
+                </span>
+              </div>
+              <div class="card-media">
+                {cover && (
+                  <Image
+                    class="cover"
+                    src={cover}
+                    alt={pick(p.cover.alt, lang)}
+                    widths={[480, 800, 1200, 1600]}
+                    sizes="(max-width: 52rem) 92vw, 56vw"
+                    loading="lazy"
+                    style={`view-transition-name:cover-${p.id}`}
+                  />
+                )}
+                {p.slides.map((s) => {
+                  const img = shot(s.file);
+                  return (
+                    img && (
+                      <Image class="slide" data-frame={s.frame} src={img} alt="" widths={[480, 960, 1440]} sizes="(max-width: 52rem) 80vw, 48vw" loading="lazy" />
+                    )
+                  );
+                })}
+              </div>
+            </article>
+          </li>
+        );
+      })
+    }
+  </ol>
+  <div class="bubble" aria-hidden="true">{pick(ui.work.view, lang)}</div>
+</section>
+
+<script>
+  const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const FINE = matchMedia('(hover: hover) and (pointer: fine)').matches;
+  const bubble = document.querySelector<HTMLElement>('.bubble')!;
+
+  if (FINE) {
+    let x = 0;
+    let y = 0;
+    let bx = 0;
+    let by = 0;
+    let raf = 0;
+    const follow = () => {
+      bx += (x - bx) * 0.22;
+      by += (y - by) * 0.22;
+      bubble.style.transform = `translate(${bx}px, ${by}px)`;
+      raf = Math.abs(x - bx) + Math.abs(y - by) > 0.3 ? requestAnimationFrame(follow) : 0;
+    };
+
+    document.querySelectorAll<HTMLElement>('[data-card]').forEach((card) => {
+      const slides = [...card.querySelectorAll<HTMLElement>('.slide')];
+      let timer: ReturnType<typeof setInterval> | undefined;
+      let n = -1;
+      const next = () => {
+        slides[n]?.classList.remove('on');
+        n = (n + 1) % slides.length;
+        slides[n].classList.add('on');
+      };
+
+      card.addEventListener('pointerenter', (e) => {
+        x = bx = e.clientX;
+        y = by = e.clientY;
+        bubble.style.setProperty('--b', getComputedStyle(card).getPropertyValue('--accent'));
+        bubble.style.setProperty('--t', getComputedStyle(card).getPropertyValue('--tone'));
+        bubble.classList.add('on');
+        card.classList.add('hover');
+        if (REDUCED || !slides.length) return;
+        card.classList.add('playing');
+        next();
+        timer = setInterval(next, 1200);
+      });
+      card.addEventListener('pointermove', (e) => {
+        x = e.clientX;
+        y = e.clientY;
+        if (!raf) raf = requestAnimationFrame(follow);
+      });
+      card.addEventListener('pointerleave', () => {
+        bubble.classList.remove('on');
+        card.classList.remove('hover', 'playing');
+        clearInterval(timer);
+        slides[n]?.classList.remove('on');
+        n = -1;
+      });
+    });
+  }
+</script>
+
+<style>
+  .work {
+    padding-top: 22vh;
+  }
+
+  .work-title {
+    margin-bottom: 8vh;
+  }
+
+  .cards {
+    display: grid;
+    padding-top: 0;
+    padding-bottom: 0;
+    list-style: none;
+  }
+
+  .slot {
+    position: sticky;
+    top: calc(var(--nav-h) + var(--i) * 14px);
+    padding-bottom: 6vh;
+  }
+
+  .slot:last-child {
+    padding-bottom: 0;
+  }
+
+  .card {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    height: min(78svh, 760px);
+    min-height: 520px;
+    overflow: hidden;
+    border-radius: 28px;
+    background: var(--tone);
+    color: var(--on-tone);
+    box-shadow: 0 -1px 0 rgba(255, 255, 255, 0.08) inset, 0 -30px 60px -40px rgba(0, 0, 0, 0.6);
+  }
+
+  .card.hover {
+    cursor: none;
+  }
+
+  .card-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 18px;
+    padding: clamp(24px, 4vw, 56px);
+  }
+
+  .card-sector {
+    color: var(--on-tone-mist);
+    font-size: 0.9375rem;
+  }
+
+  .card-name {
+    font-family: var(--display);
+    font-weight: 100;
+    font-size: clamp(2.5rem, 4.4vw, 4.5rem);
+    line-height: 1.04;
+    letter-spacing: -0.01em;
+  }
+
+  .card-link {
+    text-decoration: none;
+  }
+
+  .card-link::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    border-radius: inherit;
+  }
+
+  .card-link:focus-visible {
+    outline: none;
+  }
+
+  .card-link:focus-visible::after {
+    outline: 2px solid var(--accent);
+    outline-offset: -6px;
+    border-radius: 24px;
+  }
+
+  .card-result {
+    max-width: 24ch;
+    font-size: clamp(1.125rem, 1.5vw, 1.375rem);
+    line-height: 1.35;
+  }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 0;
+    list-style: none;
+    font-size: 0.8125rem;
+  }
+
+  .tags li {
+    padding: 5px 12px;
+    border-radius: 999px;
+    box-shadow: inset 0 0 0 1px var(--on-tone-line);
+    color: var(--on-tone-mist);
+  }
+
+  .tags .status {
+    color: var(--accent);
+    box-shadow: inset 0 0 0 1px var(--accent);
+  }
+
+  .card-cta {
+    margin-top: 6px;
+    color: var(--accent);
+    font-weight: 500;
+    font-size: 0.9375rem;
+  }
+
+  .card-media {
+    position: relative;
+    min-height: 0;
+  }
+
+  .cover {
+    position: absolute;
+    inset: 4% 2% 4% 0;
+    width: 100%;
+    height: 92%;
+    object-fit: contain;
+    transition: opacity 0.5s ease, transform 0.8s var(--ease-out);
+  }
+
+  .playing .cover {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+
+  .slide {
+    position: absolute;
+    top: 50%;
+    left: 48%;
+    width: 86%;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 0 0 1px var(--on-tone-line), 0 40px 80px -30px rgba(0, 0, 0, 0.75);
+    opacity: 0;
+    transform: translate(-50%, -48%);
+    transition: opacity 0.45s ease, transform 0.7s var(--ease-out);
+  }
+
+  .slide[data-frame="phone"] {
+    width: auto;
+    height: 82%;
+    border-radius: 26px;
+  }
+
+  .slide.on {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+
+  .bubble {
+    position: fixed;
+    z-index: 30;
+    top: -44px;
+    left: -44px;
+    display: grid;
+    place-items: center;
+    width: 88px;
+    height: 88px;
+    border-radius: 50%;
+    background: var(--b, var(--fg));
+    color: var(--t, var(--bg));
+    font-weight: 500;
+    font-size: 0.9375rem;
+    pointer-events: none;
+    opacity: 0;
+    scale: 0.4;
+    transition: opacity 0.25s ease, scale 0.35s var(--ease-out);
+  }
+
+  .bubble.on {
+    opacity: 1;
+    scale: 1;
+  }
+
+  @media (max-width: 52rem) {
+    .card {
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-rows: auto minmax(0, 1fr);
+      height: min(80svh, 700px);
+      min-height: 0;
+    }
+
+    .card-text {
+      justify-content: flex-start;
+      gap: 12px;
+    }
+
+    .card-name {
+      font-size: clamp(2.5rem, 11vw, 3.75rem);
+    }
+
+    .card-cta {
+      display: none;
+    }
+
+    .cover {
+      inset: 0;
+      height: 100%;
+    }
+  }
+</style>

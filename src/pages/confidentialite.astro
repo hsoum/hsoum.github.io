@@ -1,0 +1,94 @@
+---
+import Prose from '../layouts/Prose.astro';
+import { EMAIL } from '../data/site';
+---
+
+<Prose lang="fr" title="Politique de confidentialité" alternate="/en/privacy/">
+  <p>Dernière mise à jour : <mark>[à compléter : date de mise en ligne]</mark></p>
+
+  <h2>Qui est responsable de vos données</h2>
+  <p>Hichem Soumati, Paris, France. Contact : <a href={`mailto:${EMAIL}`}>{EMAIL}</a>.</p>
+
+  <h2>Les données traitées, et pourquoi</h2>
+  <div class="table">
+    <table>
+      <thead>
+        <tr><th>Situation</th><th>Données</th><th>Pourquoi</th><th>Base légale</th><th>Durée</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Vous cliquez « Accepter » dans le bandeau cookies</td>
+          <td>Pages vues, défilement, clics vers d’autres sites, pays et ville approximatifs, type d’appareil et de navigateur, identifiant aléatoire stocké dans un cookie</td>
+          <td>Mesurer la fréquentation du site (Google Analytics 4)</td>
+          <td>Votre consentement</td>
+          <td>Cookies : 13 mois maximum. Données dans Google Analytics : 14 mois</td>
+        </tr>
+        <tr>
+          <td>Vous réservez un appel</td>
+          <td>Nom, e-mail, entreprise ou projet, description du projet, budget (facultatif), créneau choisi</td>
+          <td>Organiser l’appel découverte et vous répondre</td>
+          <td>Mesures précontractuelles prises à votre demande</td>
+          <td><mark>[à compléter : proposé, 3 ans après le dernier contact]</mark></td>
+        </tr>
+        <tr>
+          <td>Vous écrivez par e-mail ou sur LinkedIn</td>
+          <td>Votre message et vos coordonnées</td>
+          <td>Vous répondre</td>
+          <td>Mesures précontractuelles prises à votre demande</td>
+          <td><mark>[à compléter : proposé, 3 ans après le dernier contact]</mark></td>
+        </tr>
+        <tr>
+          <td>Vous visitez le site</td>
+          <td>Adresse IP, date et heure, page demandée</td>
+          <td>Sécurité du service, assurée par l’hébergeur</td>
+          <td>Intérêt légitime de l’hébergeur</td>
+          <td>Selon la politique de GitHub</td>
+        </tr>
+        <tr>
+          <td>Vous choisissez une langue, un thème ou vos préférences cookies</td>
+          <td>Ces choix, stockés dans votre navigateur</td>
+          <td>Mémoriser vos choix</td>
+          <td>Nécessaire au service que vous demandez</td>
+          <td>Choix cookies : 6 mois. Langue et thème : jusqu’à ce que vous effaciez les données du navigateur</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Si vous cliquez « Refuser », ou si vous ne faites aucun choix, Google Analytics n’est pas chargé et aucune donnée de mesure n’est envoyée.</p>
+  <p>Aucune donnée n’est vendue ni utilisée à des fins publicitaires. Dans Google Analytics, Google signals et la personnalisation des annonces sont désactivés. Google Analytics 4 n’enregistre pas votre adresse IP.</p>
+
+  <h2>Qui reçoit vos données</h2>
+  <ul>
+    <li><strong>Google</strong> (Google Analytics), en tant que sous-traitant, seulement si vous avez accepté. Les données peuvent être transférées aux États-Unis vers Google LLC, certifiée au titre du Data Privacy Framework (décision d’adéquation de la Commission européenne du 10 juillet 2023).</li>
+    <li><strong>Cal.com, Inc.</strong>, 2261 Market Street #4382, San Francisco, CA 94114, États-Unis, si vous réservez un appel. Cal.com traite les données de réservation pour mon compte, aux États-Unis. Cal.com est certifiée Data Privacy Framework et utilise des clauses contractuelles types en complément. Sur le site de Cal.com, sa propre politique de confidentialité s’applique : <a href="https://cal.com/privacy">cal.com/privacy</a>.</li>
+    <li><strong>Mon agenda et ma messagerie</strong> : le rendez-vous est ajouté à mon agenda <mark>[à compléter : Google ou Microsoft]</mark>, et vos e-mails sont reçus sur une messagerie Microsoft (Outlook.com).</li>
+    <li><strong>GitHub, Inc.</strong>, 88 Colin P. Kelly Jr. St., San Francisco, CA 94107, États-Unis, hébergeur du site. GitHub enregistre l’adresse IP des visiteurs pour la sécurité du service. Transfert hors UE : <mark>[à confirmer : certification Data Privacy Framework de GitHub]</mark>.</li>
+    <li><strong>LinkedIn</strong>, si vous me contactez par ce biais : la politique de confidentialité de LinkedIn s’applique.</li>
+  </ul>
+
+  <h2>Cookies</h2>
+  <div class="table">
+    <table>
+      <thead>
+        <tr><th>Nom</th><th>Fournisseur</th><th>Rôle</th><th>Durée</th><th>Consentement</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>_ga</code></td><td>Google Analytics</td><td>Distinguer les visiteurs</td><td>13 mois maximum</td><td>Oui</td></tr>
+        <tr><td><code>_ga_&lt;identifiant&gt;</code></td><td>Google Analytics</td><td>Conserver l’état de la visite</td><td>13 mois maximum</td><td>Oui</td></tr>
+        <tr><td>Préférences (stockage du navigateur)</td><td>studiofaber.me</td><td>Langue, thème, choix cookies</td><td>6 mois pour le choix cookies</td><td>Non requis</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Vous pouvez changer d’avis à tout moment avec le lien <strong>« Gérer les cookies »</strong> en bas de chaque page. Retirer votre accord est aussi simple que de le donner, et supprime les cookies Google Analytics.</p>
+  <p>Le bouton « Réserver un appel » vous emmène sur le site de Cal.com, qui applique ses propres règles en matière de cookies.</p>
+
+  <h2>Vos droits</h2>
+  <p>Vous pouvez demander l’accès à vos données, leur rectification, leur effacement, leur portabilité, la limitation du traitement, ou vous y opposer. Vous pouvez retirer votre consentement à tout moment, et définir des directives sur le sort de vos données après votre décès. Écrivez à <a href={`mailto:${EMAIL}`}>{EMAIL}</a>. Je réponds sous un mois.</p>
+  <p>Si vous estimez que vos droits ne sont pas respectés, vous pouvez adresser une réclamation à la CNIL : <a href="https://www.cnil.fr">cnil.fr</a>, 3 place de Fontenoy, TSA 80715, 75334 Paris Cedex 07.</p>
+
+  <h2>Sécurité</h2>
+  <p>Le site est servi uniquement en HTTPS. Il ne vous demande aucune donnée directement : ce que vous transmettez passe par Cal.com, l’e-mail ou LinkedIn.</p>
+
+  <h2>Modifications</h2>
+  <p>Cette politique peut évoluer. La date de dernière mise à jour figure en haut de la page.</p>
+</Prose>

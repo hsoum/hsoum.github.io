@@ -1,0 +1,77 @@
+---
+import { EMAIL, GA_ID, LINKEDIN_URL } from '../data/site';
+import { pick, type Lang } from '../i18n/lang';
+import { legalPath, privacyPath, ui } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+---
+
+<footer class="foot">
+  <div class="wrap foot-in">
+    <p class="credit">{pick(ui.footer.credit, lang)}<span>{pick(ui.footer.place, lang)}</span></p>
+    <ul class="links">
+      <li><a class="link" href={`mailto:${EMAIL}`}>{EMAIL}</a></li>
+      {LINKEDIN_URL && <li><a class="link" href={LINKEDIN_URL} rel="me">LinkedIn</a></li>}
+      <li><a class="link" href={legalPath(lang)}>{pick(ui.footer.legal, lang)}</a></li>
+      <li><a class="link" href={privacyPath(lang)}>{pick(ui.footer.privacy, lang)}</a></li>
+      {
+        GA_ID && (
+          <li>
+            <button class="link cookies" type="button" data-consent-open>
+              {pick(ui.footer.cookies, lang)}
+            </button>
+          </li>
+        )
+      }
+    </ul>
+  </div>
+</footer>
+
+<style>
+  .foot {
+    border-top: 1px solid var(--line);
+    color: var(--mist);
+    font-size: 0.9375rem;
+  }
+
+  .foot-in {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 16px 40px;
+    padding-top: 36px;
+    padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 40px);
+  }
+
+  .credit span {
+    margin-left: 16px;
+  }
+
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 24px;
+    padding: 0;
+    list-style: none;
+  }
+
+  .links .link {
+    color: var(--mist);
+  }
+
+  .links .link:hover {
+    color: var(--fg);
+  }
+
+  .cookies {
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+  }
+</style>

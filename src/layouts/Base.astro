@@ -1,0 +1,83 @@
+---
+import '../styles/global.css';
+import displayThin from '../assets/fonts/zodiak-100.woff2?url';
+import displayLight from '../assets/fonts/zodiak-300.woff2?url';
+import textFont from '../assets/fonts/mona-sans.woff2?url';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import Consent from '../components/Consent.astro';
+import { GA_ID, SITE_URL } from '../data/site';
+import { pick, type Lang } from '../i18n/lang';
+import { ui } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  title?: string;
+  description?: string;
+  /** This page's address in the other language. */
+  alternate: string;
+  /** Send browsers that don't prefer French to /en/ (the French home page only). */
+  redirect?: boolean;
+  noindex?: boolean;
+}
+
+const { lang, title = pick(ui.meta.title, lang), description = pick(ui.meta.description, lang), alternate, redirect = false, noindex = false } = Astro.props;
+const path = Astro.url.pathname;
+const url = (p: string) => new URL(p, SITE_URL).href;
+const [frPath, enPath] = lang === 'fr' ? [path, alternate] : [alternate, path];
+---
+
+<!doctype html>
+<html lang={lang} data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex" />}
+    <link rel="canonical" href={url(path)} />
+    <link rel="alternate" hreflang="fr" href={url(frPath)} />
+    <link rel="alternate" hreflang="en" href={url(enPath)} />
+    <link rel="alternate" hreflang="x-default" href={url(frPath)} />
+    <meta name="theme-color" content="#07090c" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preload" href={displayThin} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={displayLight} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={textFont} as="font" type="font/woff2" crossorigin />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={url(path)} />
+    <meta property="og:image" content={url(`/og-${lang}.png`)} />
+    <meta property="og:locale" content={lang === 'fr' ? 'fr_FR' : 'en_GB'} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <script is:inline>
+      try {
+        var t = localStorage.getItem('hs-theme');
+        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+      } catch (e) {}
+    </script>
+    {
+      redirect && (
+        <script is:inline>
+          try {
+            var l = (navigator.languages && navigator.languages[0]) || navigator.language || 'fr';
+            if (!localStorage.getItem('hs-lang') && !/bot|crawl|spider|slurp|lighthouse/i.test(navigator.userAgent) && !/^fr\b/i.test(l)) {
+              location.replace('/en/' + location.search + location.hash);
+            }
+          } catch (e) {}
+        </script>
+      )
+    }
+  </head>
+  <body>
+    <a class="skip" href="#main">{pick(ui.skip, lang)}</a>
+    <div class="grain" aria-hidden="true"></div>
+    <Nav lang={lang} alternate={alternate} />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer lang={lang} />
+    {GA_ID && <Consent lang={lang} />}
+  </body>
+</html>

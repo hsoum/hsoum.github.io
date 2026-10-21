@@ -1,0 +1,442 @@
+---
+/**
+ * The statement, then one service per scroll step, pinned while the devices
+ * turn to show the project that proves each one. Script: scripts/hero.ts.
+ */
+import Logos from './Logos.astro';
+import stills from '../data/hero-stills.json';
+import { services } from '../data/services';
+import { bookingHref } from '../data/site';
+import { pick, type Lang } from '../i18n/lang';
+import { casePath, ui } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+type Box = { cx: number; cy: number; h: number; ar: number; src: string };
+const first = (set: Record<string, Box | null>[], kind: 'web' | 'phone') => set[0]?.[kind] ?? null;
+const devices = (['web', 'phone'] as const).map((kind) => ({
+  kind,
+  land: first(stills.landscape.dark as Record<string, Box | null>[], kind),
+  port: first(stills.portrait.dark as Record<string, Box | null>[], kind),
+}));
+const vars = (b: Box | null, p: string) => (b ? `--${p}cx:${b.cx};--${p}cy:${b.cy};--${p}h:${b.h};--${p}ar:${b.ar};` : '');
+---
+
+<section class="pin" aria-label={pick(ui.hero.label, lang)}>
+  <div class="stage" data-stage>
+    <div class="stills" aria-hidden="true">
+      {
+        devices.map(
+          (d) =>
+            d.land &&
+            d.port && (
+              <picture>
+                <source media="(max-aspect-ratio: 9/10)" srcset={d.port.src} />
+                <img class="still" data-kind={d.kind} src={d.land.src} alt="" style={vars(d.land, 'l') + vars(d.port, 'p')} fetchpriority={d.kind === 'web' ? 'high' : 'auto'} />
+              </picture>
+            ),
+        )
+      }
+    </div>
+
+    <h2 class="svc-heading" id="services">{pick(ui.hero.services, lang)}</h2>
+    <div class="copy">
+      <div class="step on">
+        <h1 class="statement">
+          <span class="sr-only">{pick(ui.hero.statementText, lang)}</span>
+          {
+            ui.hero.statement[lang].map((line) => (
+              <span class="sheen" aria-hidden="true">
+                {line}
+              </span>
+            ))
+          }
+        </h1>
+        <p class="lede"><strong>{pick(ui.hero.who, lang)}</strong> {pick(ui.hero.what, lang)}</p>
+        <div class="ctas">
+          <a class="btn btn-primary" href={bookingHref(pick(ui.bookSubject, lang))}>{pick(ui.book, lang)}</a>
+          <a class="link see" href="#work">{pick(ui.hero.seeWork, lang)}</a>
+        </div>
+      </div>
+      {
+        services.map((s) => (
+          <div class="step" inert>
+            <h3>{pick(s.title, lang)}</h3>
+            <p class="line">{pick(s.line, lang)}</p>
+            <p class="promise">{pick(s.promise, lang)}</p>
+            <a class="proof link" href={casePath(lang, s.proof.project) + (s.proof.anchor ? `#${s.proof.anchor}` : '')}>
+              {pick(s.proof.label, lang)}
+            </a>
+          </div>
+        ))
+      }
+    </div>
+    <ol class="ticks" aria-hidden="true">
+      {services.map(() => <li />)}
+    </ol>
+    <Logos lang={lang} class="hero-logos" />
+  </div>
+</section>
+
+<script>
+  import '../scripts/hero';
+</script>
+
+<style is:global>
+  .pin {
+    position: relative;
+    height: 560vh;
+    height: 560svh;
+  }
+
+  .stage {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    height: 100svh;
+    overflow: hidden;
+  }
+
+  /* The moonlight: a soft wash from above that follows the key light. */
+  .stage::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(75% 65% at var(--glx, 30%) -8%, var(--glow), transparent 72%);
+    pointer-events: none;
+  }
+
+  .gl {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.6s ease;
+  }
+
+  .gl.ready {
+    opacity: 1;
+  }
+
+  /* ---------- stills: the same scene, pre-rendered ---------- */
+  .stills {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    transition: opacity 0.6s ease;
+  }
+
+  .gl-ready .stills {
+    opacity: 0;
+  }
+
+  .still {
+    --cx: var(--lcx);
+    --cy: var(--lcy);
+    --h: var(--lh);
+    --ar: var(--lar);
+    position: absolute;
+    left: calc(var(--cx) * 100%);
+    top: calc(var(--cy) * 100%);
+    width: auto;
+    max-width: none;
+    height: calc(var(--h) * 100%);
+    aspect-ratio: var(--ar);
+    transform: translate(-50%, -50%);
+    transition: left 0.9s var(--ease-out), top 0.9s var(--ease-out), height 0.9s var(--ease-out), opacity 0.5s ease;
+  }
+
+  .still.gone {
+    opacity: 0;
+  }
+
+  .still.instant {
+    transition: none;
+  }
+
+  @media (max-aspect-ratio: 9/10) {
+    .still {
+      --cx: var(--pcx);
+      --cy: var(--pcy);
+      --h: var(--ph);
+      --ar: var(--par);
+    }
+  }
+
+  /* ---------- copy ---------- */
+  .copy {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: var(--pad);
+    z-index: 3;
+    width: min(46vw, 42rem);
+  }
+
+  .step {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    display: grid;
+    gap: 30px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(calc(-50% + 28px));
+    transition: opacity 0.55s ease, transform 0.7s var(--ease-out), visibility 0s linear 0.7s;
+  }
+
+  .step.past {
+    transform: translateY(calc(-50% - 28px));
+  }
+
+  .step.on {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(-50%);
+    transition: opacity 0.55s ease 0.15s, transform 0.7s var(--ease-out) 0.15s, visibility 0s;
+  }
+
+  .statement {
+    font-family: var(--display);
+    font-weight: 100;
+    font-size: clamp(3rem, min(6vw, 10.5svh), 7rem);
+    line-height: 1.04;
+    letter-spacing: -0.01em;
+  }
+
+  .statement .sheen {
+    display: block;
+    width: max-content;
+    padding-bottom: 0.04em;
+  }
+
+  .lede {
+    max-width: 34ch;
+    color: var(--mist);
+    font-size: 1.0625rem;
+    line-height: 1.55;
+  }
+
+  .lede strong {
+    color: var(--fg);
+    font-weight: 500;
+  }
+
+  .ctas {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 16px 28px;
+  }
+
+  .ctas .see {
+    font-size: 0.9375rem;
+    font-weight: 500;
+    text-underline-offset: 7px;
+  }
+
+  .svc-heading {
+    position: absolute;
+    top: 16svh;
+    left: var(--pad);
+    z-index: 3;
+    font-family: var(--display);
+    font-weight: 300;
+    font-size: 1.5rem;
+    line-height: 1.2;
+    color: var(--mist);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  }
+
+  .svc-heading.on {
+    opacity: 1;
+  }
+
+  .step h3 {
+    font-family: var(--display);
+    font-weight: 100;
+    font-size: clamp(2.75rem, 5.4vw, 6rem);
+    line-height: 1.04;
+    letter-spacing: -0.01em;
+  }
+
+  .step .line {
+    max-width: 30ch;
+    font-size: 1.1875rem;
+    line-height: 1.45;
+  }
+
+  .step .promise {
+    color: var(--em);
+    font-weight: 500;
+  }
+
+  .step .proof {
+    justify-self: start;
+    font-size: 0.9375rem;
+  }
+
+  .ticks {
+    position: absolute;
+    top: 50%;
+    left: max(6px, calc(var(--pad) / 2 - 8px));
+    z-index: 3;
+    display: grid;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    transform: translateY(-50%);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+
+  .ticks.on {
+    opacity: 1;
+  }
+
+  .ticks li {
+    width: 2px;
+    height: 22px;
+    border-radius: 2px;
+    background: var(--line);
+    transition: background-color 0.3s ease, height 0.3s ease;
+  }
+
+  .ticks li.on {
+    height: 38px;
+    background: var(--em);
+  }
+
+  .hero-logos {
+    position: absolute;
+    left: var(--pad);
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 4vh);
+    z-index: 3;
+    opacity: 0.8;
+    transition: opacity 0.4s ease;
+  }
+
+  .hero-logos.off {
+    opacity: 0;
+  }
+
+  @media (max-aspect-ratio: 9/10) {
+    .copy {
+      top: calc(env(safe-area-inset-top, 0px) + max(96px, 11svh));
+      bottom: auto;
+      right: var(--pad);
+      width: auto;
+    }
+
+    .step,
+    .step.on,
+    .step.past {
+      top: 0;
+    }
+
+    .step {
+      gap: 20px;
+      transform: translateY(24px);
+    }
+
+    .step.past {
+      transform: translateY(-24px);
+    }
+
+    .step.on {
+      transform: none;
+    }
+
+    .statement {
+      font-size: clamp(2.6rem, 12.8vw, 4.5rem);
+      line-height: 1.06;
+    }
+
+    .lede {
+      font-size: 1rem;
+    }
+
+    .ctas {
+      gap: 12px 20px;
+    }
+
+    .ctas .btn {
+      padding-inline: 22px;
+    }
+
+    .svc-heading {
+      display: none;
+    }
+
+    .step h3 {
+      font-size: clamp(2.4rem, 10.5vw, 4rem);
+    }
+
+    .step .line {
+      font-size: 1rem;
+    }
+
+    .ticks {
+      top: auto;
+      bottom: calc(env(safe-area-inset-bottom, 0px) + 5svh);
+      left: 50%;
+      grid-auto-flow: column;
+      transform: translateX(-50%);
+    }
+
+    .ticks li {
+      width: 22px;
+      height: 2px;
+    }
+
+    .ticks li.on {
+      width: 38px;
+      height: 2px;
+    }
+
+    .pin .stage .hero-logos {
+      display: none;
+    }
+  }
+
+  /* Short phones: tighter copy, so the buttons stay clear of the devices. */
+  @media (max-aspect-ratio: 9/10) and (max-height: 720px) {
+    .copy {
+      top: calc(env(safe-area-inset-top, 0px) + 86px);
+    }
+
+    .step {
+      gap: 14px;
+    }
+
+    .statement {
+      font-size: clamp(2.4rem, 10.6vw, 3.25rem);
+    }
+
+    .lede {
+      font-size: 0.9375rem;
+    }
+  }
+
+  @media (max-width: 23rem) {
+    .ctas .see {
+      font-size: 0.875rem;
+    }
+  }
+
+  /* Render mode: only the canvas matters. */
+  .rendering body > :not(main),
+  .rendering .stage > :not(canvas) {
+    visibility: hidden;
+  }
+</style>

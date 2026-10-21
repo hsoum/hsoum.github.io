@@ -1,0 +1,45 @@
+---
+/** One piece of project media: a screenshot or recording in its device frame, or a 3D render. */
+import { Image } from 'astro:assets';
+import type { Media } from '../data/projects';
+import { render, shot } from '../lib/assets';
+import { pick, type Lang } from '../i18n/lang';
+
+interface Props {
+  item: Media;
+  lang: Lang;
+}
+
+const { item, lang } = Astro.props;
+const alt = pick(item.alt, lang);
+const phone = 'frame' in item && item.frame === 'phone';
+const img = item.kind === 'shot' ? shot(item.file) : item.kind === 'render' ? render(item.file) : undefined;
+---
+
+{
+  item.kind === 'video' ? (
+    <figure class:list={['frame', 'media', { 'frame-phone': phone }]} data-frame={item.frame}>
+      <video muted loop playsinline preload="none" width={phone ? 780 : 1440} height={phone ? 1688 : 900} data-poster={`/media/${item.name}.jpg`} data-lazy-video aria-label={alt}>
+        <source src={`/media/${item.name}.mp4`} type="video/mp4" />
+      </video>
+    </figure>
+  ) : item.kind === 'shot' ? (
+    img && (
+      <figure class:list={['frame', 'media', { 'frame-phone': phone }]} data-frame={item.frame}>
+        <Image src={img} alt={alt} widths={phone ? [390, 780] : [720, 1080, 1440]} sizes={phone ? '(max-width: 52rem) 70vw, 24rem' : '(max-width: 90rem) 92vw, 1300px'} loading="lazy" />
+      </figure>
+    )
+  ) : (
+    img && (
+      <figure class="media media-render">
+        <Image src={img} alt={alt} widths={[800, 1400, 2000]} sizes="(max-width: 90rem) 96vw, 1400px" loading="lazy" />
+      </figure>
+    )
+  )
+}
+
+<style>
+  .media[data-frame="phone"] {
+    width: min(22rem, 70vw);
+  }
+</style>

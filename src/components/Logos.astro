@@ -1,0 +1,51 @@
+---
+/** The clients' marks, one colour, inlined so they follow the theme. */
+import { pick, type Lang } from '../i18n/lang';
+import { ui } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  class?: string;
+}
+
+const { lang, class: className } = Astro.props;
+const files = import.meta.glob<string>('../assets/logos/*.svg', { query: '?raw', import: 'default', eager: true });
+const svg = (name: string) => files[`../assets/logos/${name}.svg`].replace(/<title>[^<]*<\/title>/, '');
+
+// Heights balance each mark's ink: thin wordmarks get more, heavy ones less.
+const logos = [
+  { file: 'soins-et-sante', name: 'Soins et Santé', scale: 1.1 },
+  { file: 'samira-tv', name: 'Samira Plus', scale: 0.85 },
+  { file: 'gracepaws', name: 'GracePaws', scale: 1 },
+  { file: 'aurelis', name: 'Aurelis', scale: 1.2 },
+];
+---
+
+<ul class:list={['logos', className]} aria-label={pick(ui.hero.clients, lang)}>
+  {
+    logos.map((l) => (
+      <li style={`--s:${l.scale}`}>
+        <span class="sr-only">{l.name}</span>
+        <Fragment set:html={svg(l.file).replace('role="img"', 'aria-hidden="true" focusable="false"')} />
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .logos {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 14px clamp(28px, 4vw, 56px);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    color: var(--mist);
+  }
+
+  .logos :global(svg) {
+    width: auto;
+    height: calc(var(--logo-h, 28px) * var(--s));
+  }
+</style>

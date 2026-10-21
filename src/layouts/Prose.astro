@@ -1,0 +1,100 @@
+---
+/** Long-form text pages: legal notice, privacy policy. Blanks to fill are <mark>ed. */
+import Base from './Base.astro';
+import type { Lang } from '../i18n/lang';
+
+interface Props {
+  lang: Lang;
+  title: string;
+  alternate: string;
+}
+
+const { lang, title, alternate } = Astro.props;
+---
+
+<Base lang={lang} title={`${title} | Studio Faber`} alternate={alternate} noindex>
+  <article class="prose wrap">
+    <h1>{title}</h1>
+    <slot />
+  </article>
+</Base>
+
+<style>
+  .prose {
+    max-width: calc(46rem + 2 * var(--pad));
+    padding-top: calc(var(--nav-h) + 12vh);
+    padding-bottom: 18vh;
+  }
+
+  h1 {
+    margin-bottom: 8vh;
+    font-family: var(--display);
+    font-weight: 100;
+    font-size: clamp(2.75rem, 6vw, 5rem);
+    line-height: 1.04;
+  }
+
+  .prose :global(h2) {
+    margin: 56px 0 14px;
+    font-family: var(--display);
+    font-weight: 300;
+    font-size: 1.75rem;
+    line-height: 1.05;
+  }
+
+  .prose :global(p),
+  .prose :global(ul) {
+    margin-bottom: 14px;
+    color: var(--mist);
+  }
+
+  .prose :global(strong) {
+    color: var(--fg);
+    font-weight: 600;
+  }
+
+  .prose :global(a) {
+    color: var(--fg);
+    text-underline-offset: 4px;
+  }
+
+  .prose :global(li + li) {
+    margin-top: 8px;
+  }
+
+  .prose :global(.table) {
+    overflow-x: auto;
+    margin: 20px 0 28px;
+  }
+
+  .prose :global(table) {
+    width: 100%;
+    min-width: 40rem;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+  }
+
+  .prose :global(th),
+  .prose :global(td) {
+    padding: 10px 12px 10px 0;
+    border-bottom: 1px solid var(--line);
+    text-align: left;
+    vertical-align: top;
+  }
+
+  .prose :global(th) {
+    color: var(--fg);
+    font-weight: 600;
+  }
+
+  .prose :global(td) {
+    color: var(--mist);
+  }
+
+  .prose :global(mark) {
+    padding: 0 4px;
+    border-radius: 4px;
+    background: rgba(230, 180, 60, 0.22);
+    color: var(--fg);
+  }
+</style>

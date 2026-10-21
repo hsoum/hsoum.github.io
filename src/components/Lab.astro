@@ -1,0 +1,106 @@
+---
+import { concepts } from '../data/lab';
+import { pick, type Lang } from '../i18n/lang';
+import { ui } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+---
+
+<section class="lab wrap" id="lab" aria-labelledby="lab-title">
+  <header class="lab-head">
+    <h2 class="title" id="lab-title">{pick(ui.lab.title, lang)}</h2>
+    <p class="lead">{pick(ui.lab.intro, lang)}</p>
+  </header>
+
+  <ul class="concepts">
+    {
+      concepts.map((c) => (
+        <li class="concept">
+          <a class="frame concept-media" href={`/lab/${c.slug}/`} tabindex="-1" aria-hidden="true">
+            <video muted loop playsinline preload="none" width="1440" height="900" data-poster={`/media/lab-${c.slug}.jpg`} data-lazy-video>
+              <source src={`/media/lab-${c.slug}.mp4`} type="video/mp4" />
+            </video>
+          </a>
+          <h3>{c.name}</h3>
+          <p class="market">{pick(c.market, lang)}</p>
+          <p class="goal">{pick({ fr: `${ui.lab.goal.fr} : ${c.goal.fr.toLowerCase()}`, en: `${ui.lab.goal.en}: ${c.goal.en.toLowerCase()}` }, lang)}</p>
+          <a class="link" href={`/lab/${c.slug}/`}>
+            {pick(ui.lab.open, lang)}
+            <span class="sr-only">{c.name}</span>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+
+</section>
+
+<script>
+  import { lazyVideos } from '../scripts/videos';
+  lazyVideos();
+</script>
+
+<style>
+  .lab {
+    padding-top: 26vh;
+  }
+
+  .lab-head {
+    display: grid;
+    gap: 20px;
+    margin-bottom: 10vh;
+  }
+
+  .concepts {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10vh clamp(24px, 4vw, 64px);
+    padding: 0;
+    list-style: none;
+  }
+
+  .concept {
+    display: grid;
+    gap: 10px;
+    align-content: start;
+  }
+
+  .concept-media {
+    margin-bottom: 14px;
+    aspect-ratio: 1440 / 900;
+  }
+
+  .concept-media video {
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .concept h3 {
+    font-family: var(--display);
+    font-weight: 300;
+    font-size: clamp(1.75rem, 2.4vw, 2.25rem);
+    line-height: 1;
+  }
+
+  .market,
+  .goal {
+    color: var(--mist);
+  }
+
+  .concept .link {
+    justify-self: start;
+    margin-top: 4px;
+  }
+
+
+  @media (max-width: 52rem) {
+    .concepts {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 9vh;
+    }
+  }
+</style>

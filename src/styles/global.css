@@ -1,0 +1,334 @@
+/* Dark luxury: obsidian ground, moonlight that moves, air around a thin serif. */
+/* Zodiak (Fontshare, ITF Free Font License): fetched by scripts/fonts.mjs, never committed. */
+@font-face {
+  font-family: "HS Display";
+  src: url("../assets/fonts/zodiak-100.woff2") format("woff2");
+  font-weight: 100;
+  font-display: block;
+}
+
+@font-face {
+  font-family: "HS Display";
+  src: url("../assets/fonts/zodiak-300.woff2") format("woff2");
+  font-weight: 300;
+  font-display: block;
+}
+
+@font-face {
+  font-family: "HS Text";
+  src: url("../assets/fonts/mona-sans.woff2") format("woff2");
+  font-weight: 200 900;
+  font-display: swap;
+}
+
+/* Arial stretched to Mona Sans's metrics, so the swap does not move the page. */
+@font-face {
+  font-family: "HS Text Fallback";
+  src: local("Arial");
+  size-adjust: 104%;
+  ascent-override: 92%;
+  descent-override: 24%;
+}
+
+:root {
+  --bg: #07090c;
+  --fg: #e8edf3;
+  --mist: #8d97a4;
+  --line: rgba(220, 230, 242, 0.12);
+  --raise: #0d1116;
+  --glass: rgba(14, 18, 24, 0.76);
+  --glow: rgba(205, 222, 245, 0.075);
+  --sheen: #ffffff;
+  --em: #34b98a;
+  --cta: #ece6da;
+  --cta-hi: #ffffff;
+  --cta-ink: #0b0d10;
+  --on-tone: #f5f1ea;
+  --on-tone-mist: rgba(245, 241, 234, 0.68);
+  --on-tone-line: rgba(245, 241, 234, 0.18);
+  --display: "HS Display", Georgia, serif;
+  --text: "HS Text", "HS Text Fallback", "Helvetica Neue", Arial, sans-serif;
+  --gutter: max(16px, env(safe-area-inset-left, 0px));
+  --gutter-r: max(16px, env(safe-area-inset-right, 0px));
+  --pad: clamp(16px, 4vw, 64px);
+  --nav-h: 76px;
+  --ease-out: cubic-bezier(0.2, 0.7, 0.1, 1);
+  color-scheme: dark;
+}
+
+:root[data-theme="light"] {
+  --bg: #ece8df;
+  --fg: #11151a;
+  --mist: #4f565f;
+  --line: rgba(17, 21, 26, 0.12);
+  --raise: #f5f2ec;
+  --glass: rgba(246, 243, 237, 0.86);
+  --glow: rgba(255, 255, 255, 0.6);
+  --sheen: #6f7f92;
+  --em: #0b6b4e;
+  --cta: #11151a;
+  --cta-hi: #000000;
+  --cta-ink: #f3efe7;
+  color-scheme: light;
+}
+
+@view-transition {
+  navigation: auto;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-padding-top: var(--nav-h);
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--text);
+  font-size: 1rem;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+  transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+img,
+video,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+img,
+video {
+  height: auto;
+}
+
+a {
+  color: inherit;
+}
+
+button {
+  font: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--em);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+h1,
+h2,
+h3,
+p,
+ul,
+ol,
+dl,
+dd,
+figure,
+blockquote {
+  margin: 0;
+}
+
+h1,
+h2,
+h3 {
+  font-weight: inherit;
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.skip {
+  position: fixed;
+  z-index: 100;
+  top: 12px;
+  left: 12px;
+  padding: 10px 16px;
+  border-radius: 999px;
+  background: var(--fg);
+  color: var(--bg);
+  font-weight: 600;
+  text-decoration: none;
+  transform: translateY(-160%);
+}
+
+.skip:focus {
+  transform: none;
+}
+
+.wrap {
+  width: 100%;
+  max-width: 1440px;
+  margin-inline: auto;
+  padding-left: max(var(--pad), env(safe-area-inset-left, 0px));
+  padding-right: max(var(--pad), env(safe-area-inset-right, 0px));
+}
+
+/* Section titles: the thin serif, given room to breathe. */
+.title {
+  font-family: var(--display);
+  font-weight: 100;
+  font-size: clamp(2.75rem, 5.6vw, 5.5rem);
+  line-height: 1.04;
+  letter-spacing: -0.01em;
+}
+
+@media (max-width: 40rem) {
+  :root {
+    --nav-h: 64px;
+  }
+}
+
+.lead {
+  max-width: 38ch;
+  color: var(--mist);
+  font-size: clamp(1.0625rem, 1.4vw, 1.25rem);
+  line-height: 1.5;
+}
+
+/* Grain sits over everything, 3D included, so the scene and the page read as one print. */
+.grain {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  pointer-events: none;
+  opacity: 0.11;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .5 0 0 0 0 .5 0 0 0 0 .5 0 0 0 1.6 -.3'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+
+/* ---------- buttons ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 52px;
+  padding: 14px 30px;
+  border: 0;
+  border-radius: 999px;
+  font-weight: 500;
+  font-size: 0.9375rem;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+/* Ivory card stock on the dark, ink on the ivory: no gradient, no glow. */
+.btn-primary {
+  color: var(--cta-ink);
+  background: var(--cta);
+}
+
+.btn-primary:hover {
+  background: var(--cta-hi);
+}
+
+.btn-ghost {
+  color: var(--fg);
+  background: transparent;
+  box-shadow: inset 0 0 0 1px var(--line);
+}
+
+.btn-ghost:hover {
+  box-shadow: inset 0 0 0 1px var(--mist);
+}
+
+.btn-lg {
+  min-height: 60px;
+  padding: 18px 38px;
+  font-size: 1.0625rem;
+}
+
+/* A quiet link that underlines on its own hairline. */
+.link {
+  color: var(--fg);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, currentColor 30%, transparent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 5px;
+  transition: text-decoration-color 0.2s ease;
+}
+
+.link:hover {
+  text-decoration-color: currentColor;
+}
+
+/* ---------- moving light ---------- */
+.sheen {
+  background-image: linear-gradient(
+    100deg,
+    var(--fg) calc(var(--lx, 30%) - 26%),
+    var(--sheen) var(--lx, 30%),
+    var(--fg) calc(var(--lx, 30%) + 26%)
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@media (forced-colors: active) {
+  .sheen {
+    background: none;
+    color: CanvasText;
+  }
+}
+
+/* ---------- media frames ---------- */
+.frame {
+  position: relative;
+  overflow: hidden;
+  border-radius: 14px;
+  background: #0b0d10;
+  box-shadow: 0 0 0 1px var(--line), 0 40px 80px -40px rgba(0, 0, 0, 0.7);
+}
+
+.frame img,
+.frame video {
+  width: 100%;
+}
+
+.frame-phone {
+  border-radius: 34px;
+  box-shadow: 0 0 0 6px #15181d, 0 0 0 7px #2a2f37, 0 40px 80px -40px rgba(0, 0, 0, 0.7);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+
+  @view-transition {
+    navigation: none;
+  }
+}

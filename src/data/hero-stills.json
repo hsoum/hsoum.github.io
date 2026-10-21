@@ -1,0 +1,274 @@
+{
+ "portrait": {
+  "dark": [
+   {
+    "web": {
+     "cx": 0.6479,
+     "cy": 0.6726,
+     "h": 0.1935,
+     "ar": 1.298,
+     "src": "/hero/p0-web-dark.webp"
+    },
+    "phone": {
+     "cx": 0.344,
+     "cy": 0.7328,
+     "h": 0.3156,
+     "ar": 0.4869,
+     "src": "/hero/p0-phone-dark.webp"
+    }
+   },
+   {
+    "phone": null,
+    "web": {
+     "cx": 0.5043,
+     "cy": 0.6953,
+     "h": 0.22,
+     "ar": 1.4363,
+     "src": "/hero/p1-web-dark.webp"
+    }
+   },
+   {
+    "web": {
+     "cx": 0.653,
+     "cy": 0.6404,
+     "h": 0.1647,
+     "ar": 1.3765,
+     "src": "/hero/p2-web-dark.webp"
+    },
+    "phone": {
+     "cx": 0.3658,
+     "cy": 0.732,
+     "h": 0.3132,
+     "ar": 0.4968,
+     "src": "/hero/p2-phone-dark.webp"
+    }
+   },
+   {
+    "web": null,
+    "phone": {
+     "cx": 0.5009,
+     "cy": 0.7034,
+     "h": 0.3649,
+     "ar": 0.4935,
+     "src": "/hero/p3-phone-dark.webp"
+    }
+   },
+   {
+    "phone": null,
+    "web": {
+     "cx": 0.4957,
+     "cy": 0.6953,
+     "h": 0.22,
+     "ar": 1.4363,
+     "src": "/hero/p4-web-dark.webp"
+    }
+   }
+  ],
+  "light": [
+   {
+    "web": {
+     "cx": 0.6479,
+     "cy": 0.6726,
+     "h": 0.1935,
+     "ar": 1.298,
+     "src": "/hero/p0-web-light.webp"
+    },
+    "phone": {
+     "cx": 0.344,
+     "cy": 0.7328,
+     "h": 0.3156,
+     "ar": 0.4869,
+     "src": "/hero/p0-phone-light.webp"
+    }
+   },
+   {
+    "web": {
+     "cx": 0.5043,
+     "cy": 0.6953,
+     "h": 0.22,
+     "ar": 1.4363,
+     "src": "/hero/p1-web-light.webp"
+    },
+    "phone": null
+   },
+   {
+    "web": {
+     "cx": 0.653,
+     "cy": 0.6404,
+     "h": 0.1647,
+     "ar": 1.3765,
+     "src": "/hero/p2-web-light.webp"
+    },
+    "phone": {
+     "cx": 0.3658,
+     "cy": 0.732,
+     "h": 0.3132,
+     "ar": 0.4968,
+     "src": "/hero/p2-phone-light.webp"
+    }
+   },
+   {
+    "web": null,
+    "phone": {
+     "cx": 0.5009,
+     "cy": 0.7034,
+     "h": 0.3649,
+     "ar": 0.4935,
+     "src": "/hero/p3-phone-light.webp"
+    }
+   },
+   {
+    "phone": null,
+    "web": {
+     "cx": 0.4957,
+     "cy": 0.6953,
+     "h": 0.22,
+     "ar": 1.4363,
+     "src": "/hero/p4-web-light.webp"
+    }
+   }
+  ]
+ },
+ "landscape": {
+  "dark": [
+   {
+    "web": {
+     "cx": 0.7554,
+     "cy": 0.4506,
+     "h": 0.4733,
+     "ar": 1.4002,
+     "src": "/hero/l0-web-dark.webp"
+    },
+    "phone": {
+     "cx": 0.6082,
+     "cy": 0.615,
+     "h": 0.5844,
+     "ar": 0.4724,
+     "src": "/hero/l0-phone-dark.webp"
+    }
+   },
+   {
+    "phone": null,
+    "web": {
+     "cx": 0.7069,
+     "cy": 0.5,
+     "h": 0.6211,
+     "ar": 1.4454,
+     "src": "/hero/l1-web-dark.webp"
+    }
+   },
+   {
+    "web": {
+     "cx": 0.7599,
+     "cy": 0.4244,
+     "h": 0.41,
+     "ar": 1.4458,
+     "src": "/hero/l2-web-dark.webp"
+    },
+    "phone": {
+     "cx": 0.6299,
+     "cy": 0.5914,
+     "h": 0.6261,
+     "ar": 0.4809,
+     "src": "/hero/l2-phone-dark.webp"
+    }
+   },
+   {
+    "web": {
+     "cx": 0.834,
+     "cy": 0.3939,
+     "h": 0.29,
+     "ar": 1.4636,
+     "src": "/hero/l3-web-dark.webp"
+    },
+    "phone": {
+     "cx": 0.6932,
+     "cy": 0.5217,
+     "h": 0.7567,
+     "ar": 0.5,
+     "src": "/hero/l3-phone-dark.webp"
+    }
+   },
+   {
+    "phone": null,
+    "web": {
+     "cx": 0.6825,
+     "cy": 0.5,
+     "h": 0.6211,
+     "ar": 1.3551,
+     "src": "/hero/l4-web-dark.webp"
+    }
+   }
+  ],
+  "light": [
+   {
+    "web": {
+     "cx": 0.7554,
+     "cy": 0.4506,
+     "h": 0.4733,
+     "ar": 1.4002,
+     "src": "/hero/l0-web-light.webp"
+    },
+    "phone": {
+     "cx": 0.6082,
+     "cy": 0.615,
+     "h": 0.5844,
+     "ar": 0.4724,
+     "src": "/hero/l0-phone-light.webp"
+    }
+   },
+   {
+    "web": {
+     "cx": 0.7069,
+     "cy": 0.5,
+     "h": 0.6211,
+     "ar": 1.4454,
+     "src": "/hero/l1-web-light.webp"
+    },
+    "phone": null
+   },
+   {
+    "web": {
+     "cx": 0.7599,
+     "cy": 0.4244,
+     "h": 0.41,
+     "ar": 1.4458,
+     "src": "/hero/l2-web-light.webp"
+    },
+    "phone": {
+     "cx": 0.6299,
+     "cy": 0.5914,
+     "h": 0.6261,
+     "ar": 0.4809,
+     "src": "/hero/l2-phone-light.webp"
+    }
+   },
+   {
+    "web": {
+     "cx": 0.834,
+     "cy": 0.3939,
+     "h": 0.29,
+     "ar": 1.4636,
+     "src": "/hero/l3-web-light.webp"
+    },
+    "phone": {
+     "cx": 0.6932,
+     "cy": 0.5217,
+     "h": 0.7567,
+     "ar": 0.5,
+     "src": "/hero/l3-phone-light.webp"
+    }
+   },
+   {
+    "phone": null,
+    "web": {
+     "cx": 0.6825,
+     "cy": 0.5,
+     "h": 0.6211,
+     "ar": 1.3551,
+     "src": "/hero/l4-web-light.webp"
+    }
+   }
+  ]
+ }
+}

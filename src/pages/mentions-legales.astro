@@ -1,0 +1,45 @@
+---
+import Prose from '../layouts/Prose.astro';
+import { EMAIL } from '../data/site';
+---
+
+<Prose lang="fr" title="Mentions légales" alternate="/en/legal-notice/">
+  <h2>Éditeur du site</h2>
+  <p>Le site Studio Faber (studiofaber.me) est édité par :</p>
+  <p>
+    <strong>Hichem Soumati</strong>, développeur freelance, web et mobile<br />
+    Adresse : <mark>[à compléter : adresse]</mark>, Paris, France<br />
+    Téléphone : <mark>[à compléter : numéro de téléphone]</mark><br />
+    E-mail : <a href={`mailto:${EMAIL}`}>{EMAIL}</a>
+  </p>
+
+  <h2>Directeur de la publication</h2>
+  <p>Hichem Soumati</p>
+
+  <h2>Facturation des prestations</h2>
+  <p>
+    Prestations facturées par l’intermédiaire de la Junior-Entreprise Devinci Junior <mark>[à confirmer : formulation exacte]</mark>.<br />
+    Dénomination : <mark>[à compléter : dénomination exacte]</mark><br />
+    Siège : <mark>[à compléter : adresse du siège]</mark><br />
+    SIRET : <mark>[à compléter : numéro SIRET]</mark>
+  </p>
+
+  <h2>Hébergement</h2>
+  <p>
+    GitHub, Inc. (service GitHub Pages)<br />
+    88 Colin P. Kelly Jr. St., San Francisco, CA 94107, États-Unis<br />
+    Téléphone : <mark>[à compléter : téléphone de l’hébergeur]</mark><br />
+    <a href="https://github.com">github.com</a>
+  </p>
+
+  <h2>Propriété intellectuelle</h2>
+  <p>
+    La conception, les textes, les visuels et le code du site sont l’œuvre de Hichem Soumati, sauf mention contraire. Les noms, logos, captures d’écran et contenus des projets clients appartiennent à leurs titulaires respectifs et sont reproduits avec leur autorisation. Les projets de la section « Explorations » sont des concepts de design et ne représentent pas des clients. Toute reproduction sans autorisation est interdite.
+  </p>
+
+  <h2>Données personnelles et cookies</h2>
+  <p>Voir la <a href="/confidentialite/">politique de confidentialité</a>.</p>
+
+  <h2>Crédits</h2>
+  <p>Conception et réalisation : Hichem Soumati.</p>
+</Prose>

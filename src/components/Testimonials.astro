@@ -1,0 +1,69 @@
+---
+import { testimonials } from '../data/testimonials';
+import { pick, type Lang } from '../i18n/lang';
+import { ui } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+---
+
+{
+  testimonials.length > 0 && (
+    <section class="quotes wrap" aria-labelledby="quotes-title">
+      <h2 class="title" id="quotes-title">
+        {pick(ui.testimonials.title, lang)}
+      </h2>
+      <ul>
+        {testimonials.map((t) => (
+          <li>
+            <figure>
+              <blockquote>
+                <p>{pick(t.quote, lang)}</p>
+              </blockquote>
+              <figcaption>{pick(t.signature, lang)}</figcaption>
+            </figure>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )
+}
+
+<style>
+  .quotes {
+    display: grid;
+    gap: 10vh;
+    padding-top: 26vh;
+  }
+
+  ul {
+    display: grid;
+    gap: 12vh;
+    padding: 0;
+    list-style: none;
+  }
+
+  li:nth-child(even) {
+    justify-self: end;
+  }
+
+  figure {
+    display: grid;
+    gap: 20px;
+    max-width: 44rem;
+  }
+
+  blockquote p {
+    font-family: var(--display);
+    font-weight: 300;
+    font-size: clamp(1.75rem, 3vw, 2.75rem);
+    line-height: 1.22;
+  }
+
+  figcaption {
+    color: var(--mist);
+  }
+</style>

@@ -1,0 +1,94 @@
+---
+import Prose from '../../layouts/Prose.astro';
+import { EMAIL } from '../../data/site';
+---
+
+<Prose lang="en" title="Privacy policy" alternate="/confidentialite/">
+  <p>Last updated: <mark>[to fill in: launch date]</mark></p>
+
+  <h2>Who is responsible for your data</h2>
+  <p>Hichem Soumati, Paris, France. Contact: <a href={`mailto:${EMAIL}`}>{EMAIL}</a>.</p>
+
+  <h2>What data is processed, and why</h2>
+  <div class="table">
+    <table>
+      <thead>
+        <tr><th>Situation</th><th>Data</th><th>Why</th><th>Legal basis</th><th>Retention</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>You click “Accept” in the cookie banner</td>
+          <td>Pages viewed, scrolling, clicks to other sites, approximate country and city, device and browser type, a random identifier stored in a cookie</td>
+          <td>Measure site traffic (Google Analytics 4)</td>
+          <td>Your consent</td>
+          <td>Cookies: 13 months max. Data in Google Analytics: 14 months</td>
+        </tr>
+        <tr>
+          <td>You book a call</td>
+          <td>Name, email, company or project, project description, budget (optional), chosen slot</td>
+          <td>Organise the discovery call and reply to you</td>
+          <td>Steps taken at your request before a contract</td>
+          <td><mark>[to fill in: proposed, 3 years after last contact]</mark></td>
+        </tr>
+        <tr>
+          <td>You write by email or on LinkedIn</td>
+          <td>Your message and contact details</td>
+          <td>Reply to you</td>
+          <td>Steps taken at your request before a contract</td>
+          <td><mark>[to fill in: proposed, 3 years after last contact]</mark></td>
+        </tr>
+        <tr>
+          <td>You visit the site</td>
+          <td>IP address, date and time, page requested</td>
+          <td>Service security, handled by the host</td>
+          <td>The host’s legitimate interest</td>
+          <td>Per GitHub’s policy</td>
+        </tr>
+        <tr>
+          <td>You choose a language, a theme or your cookie preferences</td>
+          <td>These choices, stored in your browser</td>
+          <td>Remember your choices</td>
+          <td>Necessary for the service you request</td>
+          <td>Cookie choice: 6 months. Language and theme: until you clear your browser data</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p>If you click “Reject”, or make no choice, Google Analytics is not loaded and no measurement data is sent.</p>
+  <p>No data is sold or used for advertising. In Google Analytics, Google signals and ads personalisation are turned off. Google Analytics 4 does not store your IP address.</p>
+
+  <h2>Who receives your data</h2>
+  <ul>
+    <li><strong>Google</strong> (Google Analytics), as a processor, only if you accepted. Data may be transferred to the United States to Google LLC, certified under the Data Privacy Framework (European Commission adequacy decision of 10 July 2023).</li>
+    <li><strong>Cal.com, Inc.</strong>, 2261 Market Street #4382, San Francisco, CA 94114, United States, if you book a call. Cal.com processes booking data on my behalf, in the United States. Cal.com is certified under the Data Privacy Framework and also uses standard contractual clauses. On Cal.com’s own site, its privacy policy applies: <a href="https://cal.com/privacy">cal.com/privacy</a>.</li>
+    <li><strong>My calendar and email</strong>: the booking is added to my calendar <mark>[to fill in: Google or Microsoft]</mark>, and your emails arrive in a Microsoft (Outlook.com) mailbox.</li>
+    <li><strong>GitHub, Inc.</strong>, 88 Colin P. Kelly Jr. St., San Francisco, CA 94107, United States, the site’s host. GitHub logs visitors’ IP addresses for service security. Transfer outside the EU: <mark>[to confirm: GitHub’s Data Privacy Framework certification]</mark>.</li>
+    <li><strong>LinkedIn</strong>, if you contact me there: LinkedIn’s privacy policy applies.</li>
+  </ul>
+
+  <h2>Cookies</h2>
+  <div class="table">
+    <table>
+      <thead>
+        <tr><th>Name</th><th>Provider</th><th>Purpose</th><th>Lifetime</th><th>Consent</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>_ga</code></td><td>Google Analytics</td><td>Tell visitors apart</td><td>13 months max</td><td>Yes</td></tr>
+        <tr><td><code>_ga_&lt;id&gt;</code></td><td>Google Analytics</td><td>Keep the visit’s state</td><td>13 months max</td><td>Yes</td></tr>
+        <tr><td>Preferences (browser storage)</td><td>studiofaber.me</td><td>Language, theme, cookie choice</td><td>6 months for the cookie choice</td><td>Not required</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>You can change your mind at any time with the <strong>“Manage cookies”</strong> link at the bottom of every page. Withdrawing consent is as easy as giving it, and deletes the Google Analytics cookies.</p>
+  <p>The “Book a call” button takes you to Cal.com’s site, which applies its own cookie rules.</p>
+
+  <h2>Your rights</h2>
+  <p>You can ask to access, correct, erase or port your data, restrict its processing, or object to it. You can withdraw consent at any time, and set instructions for what happens to your data after your death. Write to <a href={`mailto:${EMAIL}`}>{EMAIL}</a>. I reply within one month.</p>
+  <p>If you believe your rights are not respected, you can complain to the CNIL, the French data protection authority: <a href="https://www.cnil.fr">cnil.fr</a>, 3 place de Fontenoy, TSA 80715, 75334 Paris Cedex 07, France.</p>
+
+  <h2>Security</h2>
+  <p>The site is served over HTTPS only. It asks you for no data directly: anything you send goes through Cal.com, email or LinkedIn.</p>
+
+  <h2>Changes</h2>
+  <p>This policy may change. The last-updated date is at the top of the page.</p>
+</Prose>

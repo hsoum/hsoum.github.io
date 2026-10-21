@@ -1,0 +1,129 @@
+---
+/**
+ * Google Analytics only after "Accept" (CNIL rules): nothing from Google loads before,
+ * "Reject" is one click like "Accept", and the choice is asked again after 6 months.
+ */
+import { GA_ID } from '../data/site';
+import { pick, type Lang } from '../i18n/lang';
+import { privacyPath, ui } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+---
+
+<section class="consent" data-consent data-ga={GA_ID} aria-label="Cookies" hidden>
+  <p>
+    {pick(ui.consent.text, lang)}
+    <a class="link" href={privacyPath(lang)}>{pick(ui.consent.more, lang)}</a>
+  </p>
+  <div class="actions">
+    <button class="btn btn-ghost" type="button" data-choice="denied">{pick(ui.consent.reject, lang)}</button>
+    <button class="btn btn-ghost" type="button" data-choice="granted">{pick(ui.consent.accept, lang)}</button>
+  </div>
+</section>
+
+<script>
+  type Choice = 'granted' | 'denied';
+  type Gtag = (...args: unknown[]) => void;
+  const w = window as unknown as { dataLayer: unknown[]; gtag: Gtag; __ga?: boolean };
+  const KEY = 'hs-consent';
+  const MAX_AGE = 182 * 864e5;
+  const el = document.querySelector<HTMLElement>('[data-consent]')!;
+  const id = el.dataset.ga!;
+
+  function read(): Choice | null {
+    try {
+      const v = JSON.parse(localStorage.getItem(KEY) ?? 'null') as { c: Choice; t: number } | null;
+      if (v && Date.now() - v.t < MAX_AGE) return v.c;
+    } catch {
+      /* ask again */
+    }
+    return null;
+  }
+
+  function save(c: Choice) {
+    try {
+      localStorage.setItem(KEY, JSON.stringify({ c, t: Date.now() }));
+    } catch {
+      /* the choice lasts for this page only */
+    }
+  }
+
+  function load() {
+    if (w.__ga) return;
+    w.__ga = true;
+    w.dataLayer = w.dataLayer || [];
+    w.gtag = function () {
+      // gtag reads the arguments object itself.
+      w.dataLayer.push(arguments);
+    };
+    w.gtag('consent', 'default', { analytics_storage: 'granted', ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied' });
+    w.gtag('js', new Date());
+    w.gtag('config', id, { cookie_expires: 395 * 86400, allow_google_signals: false, allow_ad_personalization_signals: false });
+    const s = document.createElement('script');
+    s.async = true;
+    s.src = `https://www.googletagmanager.com/gtag/js?id=${id}`;
+    document.head.append(s);
+  }
+
+  function forget() {
+    const host = location.hostname.replace(/^www\./, '');
+    for (const c of document.cookie.split(';')) {
+      const name = c.split('=')[0].trim();
+      if (name !== '_ga' && !name.startsWith('_ga_')) continue;
+      for (const domain of ['', `; domain=${host}`, `; domain=.${host}`]) document.cookie = `${name}=; Max-Age=0; path=/${domain}`;
+    }
+  }
+
+  const choice = read();
+  if (choice === 'granted') load();
+  else if (choice === null) el.hidden = false;
+
+  el.addEventListener('click', (e) => {
+    const b = (e.target as Element).closest<HTMLElement>('[data-choice]');
+    if (!b) return;
+    const c = b.dataset.choice as Choice;
+    save(c);
+    el.hidden = true;
+    if (c === 'granted') return load();
+    forget();
+    // Google's script is already running: a reload is the only way to stop it.
+    if (w.__ga) location.reload();
+  });
+
+  document.querySelectorAll('[data-consent-open]').forEach((b) =>
+    b.addEventListener('click', () => {
+      el.hidden = false;
+      el.querySelector('button')?.focus();
+    }),
+  );
+</script>
+
+<style>
+  .consent {
+    position: fixed;
+    z-index: 45;
+    left: max(12px, env(safe-area-inset-left, 0px));
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 12px);
+    display: grid;
+    gap: 14px;
+    width: min(400px, calc(100vw - 24px));
+    padding: 20px;
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    background: var(--glass);
+    -webkit-backdrop-filter: blur(18px) saturate(150%);
+    backdrop-filter: blur(18px) saturate(150%);
+    font-size: 0.9375rem;
+    line-height: 1.5;
+  }
+
+  .actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+</style>

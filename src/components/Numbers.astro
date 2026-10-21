@@ -1,0 +1,91 @@
+---
+import { numbers } from '../data/numbers';
+import { pick, type Lang } from '../i18n/lang';
+import { casePath, ui } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+---
+
+<section class="numbers wrap" aria-labelledby="numbers-title">
+  <h2 class="sr-only" id="numbers-title">{pick(ui.numbers.title, lang)}</h2>
+  <ul>
+    {
+      numbers.map((n) => (
+        <li>
+          <a href={casePath(lang, n.project)}>
+            <span class="value">{pick(n.value, lang)}</span>
+            <span class="label">{pick(n.label, lang)}</span>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</section>
+
+<style>
+  .numbers {
+    padding-top: 26vh;
+  }
+
+  ul {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    padding: 0;
+    list-style: none;
+  }
+
+  li + li {
+    border-left: 1px solid var(--line);
+  }
+
+  a {
+    display: grid;
+    gap: 14px;
+    align-content: start;
+    height: 100%;
+    padding: 8px clamp(16px, 2.4vw, 36px);
+    text-decoration: none;
+  }
+
+  li:first-child a {
+    padding-left: 0;
+  }
+
+  .value {
+    font-family: var(--display);
+    font-weight: 100;
+    font-size: clamp(3rem, 5.6vw, 5.5rem);
+    line-height: 1;
+    font-variant-numeric: lining-nums;
+  }
+
+  .label {
+    max-width: 22ch;
+    color: var(--mist);
+    font-size: 0.9375rem;
+    transition: color 0.2s ease;
+  }
+
+  a:hover .label {
+    color: var(--fg);
+  }
+
+  @media (max-width: 52rem) {
+    ul {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      row-gap: 40px;
+    }
+
+    li:nth-child(odd) {
+      border-left: 0;
+    }
+
+    li:nth-child(odd) a {
+      padding-left: 0;
+    }
+  }
+</style>

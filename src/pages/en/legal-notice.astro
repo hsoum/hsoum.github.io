@@ -1,0 +1,45 @@
+---
+import Prose from '../../layouts/Prose.astro';
+import { EMAIL } from '../../data/site';
+---
+
+<Prose lang="en" title="Legal notice" alternate="/mentions-legales/">
+  <h2>Publisher</h2>
+  <p>The Studio Faber site (studiofaber.me) is published by:</p>
+  <p>
+    <strong>Hichem Soumati</strong>, freelance developer, web and mobile<br />
+    Address: <mark>[to fill in: address]</mark>, Paris, France<br />
+    Phone: <mark>[to fill in: phone number]</mark><br />
+    Email: <a href={`mailto:${EMAIL}`}>{EMAIL}</a>
+  </p>
+
+  <h2>Publication director</h2>
+  <p>Hichem Soumati</p>
+
+  <h2>Invoicing</h2>
+  <p>
+    Services invoiced through the Junior-Entreprise Devinci Junior <mark>[to confirm: exact wording]</mark>.<br />
+    Legal name: <mark>[to fill in: exact legal name]</mark><br />
+    Registered office: <mark>[to fill in: registered office address]</mark><br />
+    SIRET: <mark>[to fill in: SIRET number]</mark>
+  </p>
+
+  <h2>Hosting</h2>
+  <p>
+    GitHub, Inc. (GitHub Pages)<br />
+    88 Colin P. Kelly Jr. St., San Francisco, CA 94107, United States<br />
+    Phone: <mark>[to fill in: host’s phone number]</mark><br />
+    <a href="https://github.com">github.com</a>
+  </p>
+
+  <h2>Intellectual property</h2>
+  <p>
+    The site’s design, text, visuals and code are the work of Hichem Soumati unless stated otherwise. Client names, logos, screenshots and project content belong to their respective owners and are reproduced with their permission. The projects in the “Design explorations” section are design concepts and do not represent clients. Any reproduction without permission is prohibited.
+  </p>
+
+  <h2>Personal data and cookies</h2>
+  <p>See the <a href="/en/privacy/">privacy policy</a>.</p>
+
+  <h2>Credits</h2>
+  <p>Designed and built by Hichem Soumati.</p>
+</Prose>

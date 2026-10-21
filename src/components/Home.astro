@@ -1,0 +1,44 @@
+---
+import Base from '../layouts/Base.astro';
+import Hero from './Hero.astro';
+import Logos from './Logos.astro';
+import Work from './Work.astro';
+import Lab from './Lab.astro';
+import Testimonials from './Testimonials.astro';
+import Numbers from './Numbers.astro';
+import Contact from './Contact.astro';
+import { homePath, otherLang, type Lang } from '../i18n/lang';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+---
+
+<Base lang={lang} alternate={homePath(otherLang(lang))} redirect={lang === 'fr'}>
+  <Hero lang={lang} />
+  <div class="wrap logos-band">
+    <Logos lang={lang} />
+  </div>
+  <Work lang={lang} />
+  <Lab lang={lang} />
+  <Testimonials lang={lang} />
+  <Numbers lang={lang} />
+  <Contact lang={lang} />
+</Base>
+
+<style>
+  /* On tall screens the hero has no room for the logos; they follow it instead. */
+  .logos-band {
+    display: none;
+    --logo-h: 24px;
+  }
+
+  @media (max-aspect-ratio: 9/10) {
+    .logos-band {
+      display: block;
+      padding-top: 8vh;
+    }
+  }
+</style>

@@ -1,0 +1,427 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import Media from './Media.astro';
+import { nextProject, type Project } from '../data/projects';
+import { bookingHref } from '../data/site';
+import { render } from '../lib/assets';
+import { homePath, otherLang, pick, type Lang } from '../i18n/lang';
+import { casePath, ui } from '../i18n/ui';
+
+interface Props {
+  project: Project;
+  lang: Lang;
+}
+
+const { project: p, lang } = Astro.props;
+const next = nextProject(p.id);
+const cover = render(p.cover.file);
+const t = (x: { fr: string; en: string }) => pick(x, lang);
+---
+
+<Base lang={lang} alternate={casePath(otherLang(lang), p.id)} title={pick({ fr: `${p.name} : ${p.title.fr}`, en: `${p.name}: ${p.title.en}` }, lang) + ' | Studio Faber'} description={t(p.need)}>
+  <article class="case" style={`--tone:${p.tone};--accent:${p.accent}`}>
+    <header class="case-hero" style={`view-transition-name:tone-${p.id}`}>
+      <div class="wrap case-hero-in">
+        <div class="case-hero-text">
+          <a class="back" href={`${homePath(lang)}#work`}>
+            <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3 5 8l5 5" fill="none" stroke="currentColor" stroke-width="1.5"></path></svg>
+            {t(ui.case.back)}
+          </a>
+          <p class="sector">
+            {t(p.sector) + (p.client !== p.name ? `, ${p.client}` : '')}
+          </p>
+          <h1 class="case-name">{p.name}</h1>
+          <p class="case-title">{t(p.title)}</p>
+          <ul class="tags">
+            {p.services.map((s) => <li>{t(s)}</li>)}
+            {p.status && <li class="status">{t(p.status)}</li>}
+          </ul>
+          {
+            (p.links || p.credit) && (
+              <p class="case-links">
+                {p.links?.map((l) => (
+                  <a class="link" href={l.href}>
+                    {t(l.label)}
+                  </a>
+                ))}
+                {p.credit && <span>{t(p.credit)}</span>}
+              </p>
+            )
+          }
+        </div>
+        <div class="case-cover">
+          {cover && <Image src={cover} alt={t(p.cover.alt)} widths={[600, 1000, 1400, 1800]} sizes="(max-width: 52rem) 96vw, 58vw" loading="eager" fetchpriority="high" style={`view-transition-name:cover-${p.id}`} />}
+        </div>
+      </div>
+    </header>
+
+    <section class="wrap block">
+      <h2>{t(ui.case.need)}</h2>
+      <p class="need">{t(p.need)}</p>
+    </section>
+
+    {
+      p.media.length > 0 && (
+        <div class="wrap gallery" data-count={p.media.length}>
+          {p.media.map((m) => (
+            <Media item={m} lang={lang} />
+          ))}
+        </div>
+      )
+    }
+
+    <section class="wrap block">
+      <h2>{t(ui.case.built)}</h2>
+      <ul class="built">
+        {p.built.map((b) => <li>{t(b)}</li>)}
+      </ul>
+    </section>
+
+    <section class="wrap figures" aria-labelledby="figures-title">
+      <h2 class="sr-only" id="figures-title">{t(ui.case.numbers)}</h2>
+      <ul>
+        {
+          p.numbers.map((n) => (
+            <li>
+              <span class="value">{t(n.value)}</span>
+              <span class="label">{t(n.label)}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <section class="wrap block">
+      <h2>{t(ui.case.holds)}</h2>
+      <ul class="holds">
+        {
+          p.holds.map((h) => (
+            <li>
+              <h3>{t(h.title)}</h3>
+              <p>{t(h.body)}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    {
+      p.second && (
+        <section class="second" id={p.second.id} aria-labelledby={`${p.second.id}-title`}>
+          <div class="wrap block">
+            <h2 id={`${p.second.id}-title`}>{t(p.second.title)}</h2>
+            <div class="second-body">
+              <p class="need">{t(p.second.body)}</p>
+              <ul class="built">
+                {p.second.built.map((b) => (
+                  <li>{t(b)}</li>
+                ))}
+              </ul>
+            </div>
+          </div>
+          <div class="wrap gallery" data-count={p.second.media.length}>
+            {p.second.media.map((m) => (
+              <Media item={m} lang={lang} />
+            ))}
+          </div>
+        </section>
+      )
+    }
+
+    <section class="wrap case-cta">
+      <p>{t(ui.case.cta)}</p>
+      <a class="btn btn-primary btn-lg" href={bookingHref(t(ui.bookSubject))}>{t(ui.book)}</a>
+    </section>
+
+    <a class="next" href={casePath(lang, next.id)} style={`--tone:${next.tone};--accent:${next.accent}`}>
+      <span class="wrap next-in">
+        <span class="next-label">{t(ui.case.next)}</span>
+        <span class="next-name">{next.name}</span>
+        <span class="next-result">{t(next.result)}</span>
+      </span>
+    </a>
+  </article>
+</Base>
+
+<script>
+  import { lazyVideos } from '../scripts/videos';
+  lazyVideos();
+</script>
+
+<style>
+  .case-hero {
+    min-height: min(92svh, 980px);
+    padding-top: calc(var(--nav-h) + 6vh);
+    border-radius: 0 0 28px 28px;
+    background: var(--tone);
+    color: var(--on-tone);
+  }
+
+  .case-hero-in {
+    display: grid;
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    gap: clamp(24px, 4vw, 64px);
+    align-items: center;
+    padding-bottom: 8vh;
+  }
+
+  .case-hero-text {
+    display: grid;
+    gap: 20px;
+    justify-items: start;
+  }
+
+  .back {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 4vh;
+    color: var(--on-tone-mist);
+    font-size: 0.9375rem;
+    text-decoration: none;
+  }
+
+  .back:hover {
+    color: var(--on-tone);
+  }
+
+  .sector {
+    color: var(--on-tone-mist);
+  }
+
+  .case-name {
+    font-family: var(--display);
+    font-weight: 100;
+    font-size: clamp(3rem, 6.4vw, 7rem);
+    line-height: 1.02;
+    letter-spacing: -0.012em;
+  }
+
+  .case-title {
+    max-width: 26ch;
+    font-size: clamp(1.25rem, 1.8vw, 1.625rem);
+    line-height: 1.3;
+  }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 0;
+    list-style: none;
+    font-size: 0.8125rem;
+  }
+
+  .tags li {
+    padding: 5px 12px;
+    border-radius: 999px;
+    box-shadow: inset 0 0 0 1px var(--on-tone-line);
+    color: var(--on-tone-mist);
+  }
+
+  .tags .status {
+    color: var(--accent);
+    box-shadow: inset 0 0 0 1px var(--accent);
+  }
+
+  .case-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 22px;
+    color: var(--on-tone-mist);
+    font-size: 0.9375rem;
+  }
+
+  .case-links .link {
+    color: var(--on-tone);
+    text-decoration-color: var(--on-tone-line);
+  }
+
+  .case-cover img {
+    width: 100%;
+    max-height: 70svh;
+    object-fit: contain;
+  }
+
+  /* ---------- body ---------- */
+  .block {
+    display: grid;
+    grid-template-columns: minmax(0, 0.42fr) minmax(0, 1fr);
+    gap: 24px clamp(24px, 5vw, 80px);
+    padding-top: 20vh;
+  }
+
+  .block h2 {
+    font-family: var(--display);
+    font-weight: 100;
+    font-size: clamp(2.25rem, 3.6vw, 3.5rem);
+    line-height: 1.06;
+  }
+
+  .need {
+    max-width: 34ch;
+    font-size: clamp(1.25rem, 2vw, 1.75rem);
+    line-height: 1.4;
+  }
+
+  .built {
+    display: grid;
+    padding: 0;
+    list-style: none;
+    font-size: 1.125rem;
+  }
+
+  .built li {
+    padding: 16px 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .built li:first-child {
+    padding-top: 0;
+  }
+
+  .second-body {
+    display: grid;
+    gap: 40px;
+  }
+
+  .gallery {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: clamp(24px, 4vw, 56px);
+    padding-top: 16vh;
+  }
+
+  .gallery > :global(.frame:not(.frame-phone)) {
+    flex: 1 1 0;
+    max-width: 1100px;
+  }
+
+  .gallery > :global(.media-render) {
+    flex: 1 1 auto;
+  }
+
+  .figures ul {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+    gap: 40px clamp(24px, 4vw, 56px);
+    padding: 20vh 0 0;
+    list-style: none;
+  }
+
+  .figures li {
+    display: grid;
+    gap: 14px;
+    align-content: start;
+    padding-top: 22px;
+    border-top: 1px solid var(--line);
+  }
+
+  .value {
+    font-family: var(--display);
+    font-weight: 100;
+    font-size: clamp(3rem, 5.6vw, 5.5rem);
+    line-height: 1;
+  }
+
+  .label {
+    max-width: 24ch;
+    color: var(--mist);
+  }
+
+  .holds {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 48px clamp(24px, 4vw, 56px);
+    padding: 0;
+    list-style: none;
+  }
+
+  .holds h3 {
+    margin-bottom: 10px;
+    font-family: var(--display);
+    font-weight: 300;
+    font-size: clamp(1.5rem, 2vw, 1.875rem);
+    line-height: 1;
+  }
+
+  .holds p {
+    max-width: 36ch;
+    color: var(--mist);
+  }
+
+  .case-cta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding-top: 22vh;
+    padding-bottom: 14vh;
+  }
+
+  .case-cta p {
+    font-family: var(--display);
+    font-weight: 100;
+    font-size: clamp(2.25rem, 4.2vw, 4.25rem);
+    line-height: 1.06;
+  }
+
+  .next {
+    display: block;
+    border-radius: 28px 28px 0 0;
+    background: var(--tone);
+    color: var(--on-tone);
+    text-decoration: none;
+  }
+
+  .next-in {
+    display: grid;
+    gap: 16px;
+    padding-top: 12vh;
+    padding-bottom: 14vh;
+  }
+
+  .next-label {
+    color: var(--on-tone-mist);
+  }
+
+  .next-name {
+    font-family: var(--display);
+    font-weight: 100;
+    font-size: clamp(3rem, 8vw, 8rem);
+    line-height: 1.02;
+    transition: color 0.3s ease;
+  }
+
+  .next:hover .next-name {
+    color: var(--accent);
+  }
+
+  .next-result {
+    color: var(--on-tone-mist);
+    font-size: 1.125rem;
+  }
+
+  @media (max-width: 52rem) {
+    .case-hero-in,
+    .block,
+    .holds {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .block {
+      padding-top: 14vh;
+    }
+
+    .figures ul {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .gallery {
+      flex-direction: column;
+    }
+  }
+</style>

@@ -1,0 +1,119 @@
+---
+import { EMAIL, LINKEDIN_URL, bookingHref } from '../data/site';
+import { pick, type Lang } from '../i18n/lang';
+import { ui } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+---
+
+<section class="contact wrap" id="contact" aria-labelledby="contact-title">
+  <h2 class="contact-title" id="contact-title"><span class="sheen">{pick(ui.contact.title, lang)}</span></h2>
+  <div class="contact-body">
+    <p class="lead">{pick(ui.contact.body, lang)}</p>
+    <div class="actions">
+      <a class="btn btn-primary btn-lg" href={bookingHref(pick(ui.bookSubject, lang))}>{pick(ui.book, lang)}</a>
+      <p class="reply">{pick(ui.contact.reply, lang)}</p>
+    </div>
+    <p class="channels">
+      {pick(ui.contact.or, lang)}
+      <a class="link" href={`mailto:${EMAIL}`}>{EMAIL}</a>
+      {
+        LINKEDIN_URL && (
+          <>
+            {lang === 'fr' ? 'ou sur' : 'or on'}
+            <a class="link" href={LINKEDIN_URL} rel="me">
+              LinkedIn
+            </a>
+          </>
+        )
+      }
+    </p>
+  </div>
+</section>
+
+<script>
+  // Without the 3D stage on screen, the closing statement keeps a slow light of its own.
+  const els = document.querySelectorAll<HTMLElement>('.contact .sheen');
+  if (els.length && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    let on = false;
+    const tick = (t: number) => {
+      const lx = ((Math.sin((t / 1000) * ((Math.PI * 2) / 18)) + 1) / 2) * 100;
+      els.forEach((el) => el.style.setProperty('--lx', `${lx.toFixed(1)}%`));
+      if (on) requestAnimationFrame(tick);
+    };
+    new IntersectionObserver(([e]) => {
+      on = e.isIntersecting;
+      if (on) requestAnimationFrame(tick);
+    }).observe(els[0]);
+  }
+</script>
+
+<style>
+  .contact {
+    position: relative;
+    display: grid;
+    gap: 6vh;
+    padding-top: 30vh;
+    padding-bottom: 18vh;
+  }
+
+  .contact::before {
+    content: "";
+    position: absolute;
+    inset: 12vh 0 0;
+    background: radial-gradient(60% 55% at 30% 0%, var(--glow), transparent 72%);
+    pointer-events: none;
+  }
+
+  .contact-title {
+    position: relative;
+    font-family: var(--display);
+    font-weight: 100;
+    font-size: clamp(3.25rem, 8vw, 9rem);
+    line-height: 1.02;
+    letter-spacing: -0.012em;
+  }
+
+  .contact-title .sheen {
+    display: block;
+    padding-bottom: 0.04em;
+  }
+
+  .contact-body {
+    position: relative;
+    display: grid;
+    gap: 28px;
+    max-width: 40rem;
+    margin-left: auto;
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 14px 24px;
+  }
+
+  .reply {
+    color: var(--em);
+    font-weight: 500;
+  }
+
+  .channels {
+    color: var(--mist);
+  }
+
+  .channels .link {
+    margin-inline: 4px;
+  }
+
+  @media (max-width: 52rem) {
+    .contact-body {
+      margin-left: 0;
+    }
+  }
+</style>
