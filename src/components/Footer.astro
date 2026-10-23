@@ -12,7 +12,7 @@ const { lang } = Astro.props;
 
 <footer class="foot">
   <div class="wrap foot-in">
-    <p class="credit">{pick(ui.footer.credit, lang)}<span>{pick(ui.footer.place, lang)}</span></p>
+    <p class="credit">{pick(ui.footer.credit, lang)}</p>
     <ul class="links">
       <li><a class="link" href={`mailto:${EMAIL}`}>{EMAIL}</a></li>
       {LINKEDIN_URL && <li><a class="link" href={LINKEDIN_URL} rel="me">LinkedIn</a></li>}
@@ -46,10 +46,6 @@ const { lang } = Astro.props;
     gap: 16px 40px;
     padding-top: 36px;
     padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 40px);
-  }
-
-  .credit span {
-    margin-left: 16px;
   }
 
   .links {

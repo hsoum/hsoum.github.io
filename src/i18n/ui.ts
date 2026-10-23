@@ -7,12 +7,12 @@ export const privacyPath = (lang: Lang) => (lang === 'fr' ? '/confidentialite/' 
 export const ui = {
   meta: {
     title: {
-      fr: 'Studio Faber | Hichem Soumati, développeur freelance web et mobile à Paris',
-      en: 'Studio Faber | Hichem Soumati, freelance web and mobile developer in Paris',
+      fr: 'Studio Faber | Hichem Soumati, développeur freelance web et mobile',
+      en: 'Studio Faber | Hichem Soumati, freelance web and mobile developer',
     },
     description: {
-      fr: 'Applications web, boutiques en ligne, applications mobiles et sites de marque, pour les startups et les entreprises. Développeur freelance à Paris.',
-      en: 'Web apps, online stores, mobile apps and brand sites for startups and businesses. Freelance developer in Paris.',
+      fr: 'Applications web, boutiques en ligne, applications mobiles et sites de marque, pour les startups et les entreprises. Développeur freelance, web et mobile.',
+      en: 'Web apps, online stores, mobile apps and brand sites for startups and businesses. Freelance developer, web and mobile.',
     },
   },
   skip: { fr: 'Aller au contenu', en: 'Skip to content' },
@@ -31,7 +31,7 @@ export const ui = {
     label: { fr: 'Présentation et services', en: 'Introduction and services' },
     statement: { fr: ['Livré vite.', 'Fait pour durer.'], en: ['Built to ship.', 'Built to last.'] },
     statementText: { fr: 'Livré vite. Fait pour durer.', en: 'Built to ship. Built to last.' },
-    who: { fr: 'Hichem Soumati, développeur freelance, web et mobile, à Paris.', en: 'Hichem Soumati, freelance developer, web and mobile, in Paris.' },
+    who: { fr: 'Hichem Soumati, développeur freelance, web et mobile.', en: 'Hichem Soumati, freelance developer, web and mobile.' },
     what: {
       fr: 'Applications, boutiques en ligne et sites pour les startups et les entreprises.',
       en: 'Apps, online stores and websites for startups and businesses.',
@@ -76,7 +76,6 @@ export const ui = {
   },
   footer: {
     credit: { fr: 'Conçu et développé par Hichem Soumati', en: 'Designed and built by Hichem Soumati' },
-    place: { fr: 'Paris, France', en: 'Paris, France' },
     legal: { fr: 'Mentions légales', en: 'Legal notice' },
     privacy: { fr: 'Confidentialité', en: 'Privacy' },
     cookies: { fr: 'Gérer les cookies', en: 'Manage cookies' },
