@@ -170,13 +170,20 @@ function init(stageEl: HTMLElement) {
     document.documentElement.toggleAttribute('data-statement', step === 0);
   }
 
-  /** Pinned, only the current step can be reached; swiped, every slide is there to read. */
+  /** The marks are buttons on a phone and decoration elsewhere. */
   function reach() {
-    const mobile = isMobile();
-    steps.forEach((el, i) => (el.inert = !mobile && i !== step));
-    if (mobile) ticksEl?.removeAttribute('aria-hidden');
+    if (isMobile()) ticksEl?.removeAttribute('aria-hidden');
     else ticksEl?.setAttribute('aria-hidden', 'true');
   }
+
+  // Pinned, a step out of sight is still in the tab order: focus scrolls the page to it.
+  const MIDDLES = [0, 0.22, 0.42, 0.62, 0.86];
+  steps.forEach((el, i) =>
+    el.addEventListener('focusin', () => {
+      if (isMobile() || i === step) return;
+      scrollTo({ top: pin.offsetTop + (pin.offsetHeight - innerHeight) * MIDDLES[i], behavior: 'auto' });
+    }),
+  );
 
   function go(next: number) {
     step = next;

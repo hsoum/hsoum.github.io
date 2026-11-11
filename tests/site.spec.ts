@@ -160,7 +160,14 @@ test.describe('hero', () => {
       await scrollPin(page, f);
       await expect(on.locator('h3')).toHaveText(title);
     }
-    await expect(page.locator('.step:not(.on)').first()).toHaveAttribute('inert', '');
+    // Every step stays readable and reachable: Tab on a step out of sight scrolls to it.
+    await scrollPin(page, 0);
+    await page.locator('.ctas .see').focus();
+    await page.keyboard.press('Tab');
+    await expect(on.locator('h3')).toHaveText('Web apps and SaaS');
+    await expect(page.locator('.step.on .proof')).toBeFocused();
+    await page.keyboard.press('Tab');
+    await expect(on.locator('h3')).toHaveText('Online stores');
   });
 });
 

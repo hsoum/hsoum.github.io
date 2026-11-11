@@ -66,7 +66,7 @@ const vars = (b: Box | null, p: string) => (b ? `--${p}cx:${b.cx};--${p}cy:${b.c
       <h2 class="svc-heading" id="services">{pick(ui.hero.services, lang)}</h2>
       {
         services.map((s) => (
-          <div class="step" inert>
+          <div class="step">
             <h3>{pick(s.title, lang)}</h3>
             <p class="line">{pick(s.line, lang)}</p>
             <p class="promise">{pick(s.promise, lang)}</p>
@@ -203,10 +203,12 @@ const vars = (b: Box | null, p: string) => (b ? `--${p}cx:${b.cx};--${p}cy:${b.c
     right: 0;
     display: grid;
     gap: 30px;
+    /* Out of sight, but not hidden: a screen reader reads every step, and Tab reaches each
+       one (the script then scrolls it into place). */
     opacity: 0;
-    visibility: hidden;
+    pointer-events: none;
     transform: translateY(calc(-50% + 28px));
-    transition: opacity 0.55s ease, transform 0.7s var(--ease-out), visibility 0s linear 0.7s;
+    transition: opacity 0.55s ease, transform 0.7s var(--ease-out);
   }
 
   .step.past {
@@ -215,9 +217,9 @@ const vars = (b: Box | null, p: string) => (b ? `--${p}cx:${b.cx};--${p}cy:${b.c
 
   .step.on {
     opacity: 1;
-    visibility: visible;
+    pointer-events: auto;
     transform: translateY(-50%);
-    transition: opacity 0.55s ease 0.15s, transform 0.7s var(--ease-out) 0.15s, visibility 0s;
+    transition: opacity 0.55s ease 0.15s, transform 0.7s var(--ease-out) 0.15s;
   }
 
   .statement {
@@ -324,7 +326,7 @@ const vars = (b: Box | null, p: string) => (b ? `--${p}cx:${b.cx};--${p}cy:${b.c
     width: 2px;
     height: 22px;
     border-radius: 2px;
-    background: var(--line);
+    background: color-mix(in srgb, var(--mist) 85%, transparent);
     transition: background-color 0.3s ease, height 0.3s ease;
   }
 
@@ -500,23 +502,25 @@ const vars = (b: Box | null, p: string) => (b ? `--${p}cx:${b.cx};--${p}cy:${b.c
     align-content: center;
     padding: 0 calc(100% - var(--pad) - min(46vw, 42rem)) 0 var(--pad);
     opacity: 1;
-    visibility: visible;
+    pointer-events: auto;
     transform: none;
     transition: none;
     scroll-snap-align: start;
     scroll-snap-stop: always;
   }
 
-  /* Text links get a full-size touch target without moving. */
-  [data-mobile] .ctas .see,
-  [data-mobile] .step .proof {
-    display: inline-flex;
-    align-items: center;
-    min-height: 44px;
-  }
+  /* Touch screens of any size: text links get a full-size target without moving. */
+  @media (pointer: coarse) {
+    .ctas .see,
+    .step .proof {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+    }
 
-  [data-mobile] .step .proof {
-    margin-block: -11px;
+    .step .proof {
+      margin-block: -11px;
+    }
   }
 
   [data-mobile] .ticks {

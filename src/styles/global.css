@@ -106,37 +106,39 @@ body {
   touch-action: pan-y pinch-zoom;
 }
 
-/* Phones: links and controls that stand alone get a 44px touch target. */
-html[data-mobile] :is(.links .link, .case-links .link, .concept .link, .back) {
-  display: inline-flex;
-  align-items: center;
-  min-height: 44px;
+/* Touch screens of any size: links and controls that stand alone get a 44px target. */
+@media (pointer: coarse) {
+  html :is(.links .link, .case-links .link, .concept .link, .back) {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+
+  html :is(.foot .links, .case-links) {
+    align-items: center;
+    row-gap: 0;
+  }
+
+  /* Inside a sentence the line keeps its height; only the touch area grows. */
+  html .channels .link {
+    padding-block: 12px;
+  }
+
+  html .nav .nav-name {
+    padding-block: 9px;
+  }
+
+  html .nav :is(.nav-lang, .nav-links a) {
+    min-width: 44px;
+  }
+
+  html .nav .nav-theme {
+    width: 44px;
+  }
 }
 
-html[data-mobile] :is(.foot .links, .case-links) {
-  align-items: center;
-  row-gap: 0;
-}
-
-/* Inside a sentence the line keeps its height; only the touch area grows. */
-html[data-mobile] .channels .link {
-  padding-block: 12px;
-}
-
-html[data-mobile] .nav-name {
-  padding-block: 9px;
-}
-
-html[data-mobile] .nav-lang {
-  min-width: 44px;
-}
-
-html[data-mobile] .nav-theme {
-  width: 44px;
-}
-
-@media (max-width: 40rem) {
-  html[data-mobile] .nav-name {
+@media (pointer: coarse) and (max-width: 40rem) {
+  html .nav .nav-name {
     padding-block: 5px;
   }
 }
