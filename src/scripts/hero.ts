@@ -150,7 +150,7 @@ function init(stageEl: HTMLElement) {
       moving = true;
       // Browsers without scrollend: no scroll for a moment means it stopped.
       clearTimeout(stop);
-      stop = setTimeout(rested, 'onscrollend' in window ? 1000 : 150);
+      stop = setTimeout(rested, 'onscrollend' in window ? 1000 : 300);
     },
     { passive: true },
   );

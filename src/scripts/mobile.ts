@@ -32,7 +32,8 @@ export function carousel(track: HTMLElement, slides: HTMLElement[], dots: (HTMLE
   const seen = new IntersectionObserver(
     (entries) => {
       if (!isMobile()) return;
-      for (const e of entries) if (e.isIntersecting) onChange(slides.indexOf(e.target as HTMLElement));
+      // The ratio, not isIntersecting: browsers disagree on whether that honours the threshold.
+      for (const e of entries) if (e.intersectionRatio >= 0.55) onChange(slides.indexOf(e.target as HTMLElement));
     },
     { root: track, threshold: 0.6 },
   );
@@ -42,12 +43,25 @@ export function carousel(track: HTMLElement, slides: HTMLElement[], dots: (HTMLE
 
   // Browsers already cancel the click when a touch becomes a scroll; this covers the rest
   // (a drag that ends where it began, a pen, a late synthetic click).
+  // Only a click that ends a pointer gesture is judged: Enter on a link, or a click sent by
+  // assistive technology, always goes through.
   let from = 0;
-  track.addEventListener('pointerdown', () => (from = track.scrollLeft), { passive: true });
+  let down = false;
+  track.addEventListener(
+    'pointerdown',
+    () => {
+      from = track.scrollLeft;
+      down = true;
+    },
+    { passive: true },
+  );
+  track.addEventListener('pointercancel', () => (down = false), { passive: true });
   track.addEventListener(
     'click',
     (e) => {
-      if (!isMobile() || Math.abs(track.scrollLeft - from) < 8) return;
+      const gesture = down && e.detail > 0;
+      down = false;
+      if (!gesture || !isMobile() || Math.abs(track.scrollLeft - from) < 8) return;
       e.preventDefault();
       e.stopPropagation();
     },

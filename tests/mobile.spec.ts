@@ -150,6 +150,15 @@ test.describe('on a phone', () => {
     await expect(page).toHaveURL(/\/en\/work\/gracepaws\/$/);
   });
 
+  test('after a swipe, Enter on a card link still opens it', async ({ page }) => {
+    await open(page);
+    await page.locator('.cards').scrollIntoViewIfNeeded();
+    await swipe(page, '.cards', { x: -150 });
+    await page.locator('.card-link').nth(1).focus();
+    await page.keyboard.press('Enter');
+    await expect(page).toHaveURL(/\/en\/work\/soins-et-sante\/$/);
+  });
+
   test('nothing scrolls sideways, before or after swiping', async ({ page }) => {
     for (const path of ['/', HOME, '/en/work/soins-et-sante/', '/confidentialite/']) {
       await page.goto(path);

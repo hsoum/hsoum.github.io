@@ -77,7 +77,7 @@ const vars = (b: Box | null, p: string) => (b ? `--${p}cx:${b.cx};--${p}cy:${b.c
       }
     </div>
     {/* Marks with a mouse; on a phone, the dots that move between slides (the script lifts aria-hidden there). */}
-    <ol class="ticks" aria-hidden="true">
+    <ol class="ticks" aria-hidden="true" aria-label={pick(ui.hero.label, lang)}>
       {
         [pick(ui.hero.intro, lang), ...services.map((s) => pick(s.title, lang))].map((label) => (
           <li>
@@ -550,8 +550,8 @@ const vars = (b: Box | null, p: string) => (b ? `--${p}cx:${b.cx};--${p}cy:${b.c
     height: 2px;
     border-radius: 2px;
     background: currentColor;
-    opacity: 0.55;
-    transform: scaleX(0.58);
+    opacity: 0.85;
+    transform: scaleX(0.7);
     transition: transform 0.3s ease, opacity 0.3s ease, background-color 0.3s ease;
   }
 

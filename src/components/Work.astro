@@ -75,7 +75,7 @@ const { lang } = Astro.props;
       })
     }
   </ol>
-  <div class="work-dots">
+  <div class="work-dots" role="group" aria-label={pick(ui.work.title, lang)}>
     {projects.map((p) => <button type="button" aria-label={p.name} />)}
   </div>
   <div class="bubble" aria-hidden="true">{pick(ui.work.view, lang)}</div>
@@ -451,8 +451,8 @@ const { lang } = Astro.props;
     height: 2px;
     border-radius: 2px;
     background: currentColor;
-    opacity: 0.55;
-    transform: scaleX(0.58);
+    opacity: 0.85;
+    transform: scaleX(0.7);
     transition: transform 0.3s ease, opacity 0.3s ease, background-color 0.3s ease;
   }
 
