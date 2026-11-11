@@ -58,6 +58,6 @@ After a visual change to the hero, run `pnpm build && pnpm preview`, then `node 
 
 ## Deploy
 
-On every push to `main`, `.github/workflows/deploy.yml` installs, checks, builds and runs the desktop tests, then publishes `dist/` to GitHub Pages. The build downloads Zodiak from Fontshare, so it needs network access.
+On every push to `main`, `.github/workflows/deploy.yml` installs, checks, builds and runs the tests (desktop and both phone profiles, all on Chromium), then publishes `dist/` to GitHub Pages. The build downloads Zodiak from Fontshare, so it needs network access.
 
 The site's address is `https://studiofaber.me`, set in both `astro.config.mjs` (`site`) and `src/data/site.ts` (`SITE_URL`). It drives the canonical, hreflang and share-image URLs. If the domain changes, change both.

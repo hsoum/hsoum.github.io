@@ -141,6 +141,14 @@ html[data-mobile] .nav-theme {
   }
 }
 
+/* The statement has its own "book a call" right under the nav: one is enough until the
+   page moves or the hero is swiped on. The button keeps its place, so nothing shifts.
+   scripts/hero.ts sets the attribute once a swipe has come to rest: a change of style
+   that lands mid-swipe makes the track snap back. */
+html[data-mobile][data-statement] .nav:not(.scrolled) .btn {
+  visibility: hidden;
+}
+
 [hidden] {
   display: none !important;
 }

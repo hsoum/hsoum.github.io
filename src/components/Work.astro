@@ -369,6 +369,15 @@ const { lang } = Astro.props;
   }
 
   /* ---------- phones: the cards are swiped, not stacked ---------- */
+  /* Less air than the desktop's, so the cards and their dots fit one screen. */
+  :global([data-mobile]) .work {
+    padding-top: 12vh;
+  }
+
+  :global([data-mobile]) .work-title {
+    margin-bottom: 4vh;
+  }
+
   :global([data-mobile]) .cards {
     display: flex;
     gap: 12px;

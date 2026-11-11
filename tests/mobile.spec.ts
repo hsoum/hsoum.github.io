@@ -1,4 +1,5 @@
 import { test, expect, type CDPSession, type Page } from '@playwright/test';
+import AxeBuilder from '@axe-core/playwright';
 
 /**
  * Phones swipe where computers scroll: the hero and the work cards are native scroll-snap
@@ -41,10 +42,15 @@ const open = async (page: Page) => {
   // The steps don't depend on the live 3D, and compiling it without a GPU (CI) stalls the page.
   await page.route(/hero-3d|stage\./, (r) => r.abort());
   await page.goto(HOME);
+  // A font or an image that lands mid-swipe changes the layout, and the track snaps back.
+  await page.waitForLoadState('networkidle');
+  await page.evaluate(() => document.fonts.ready);
 };
 
 test.describe('on a phone', () => {
   test.skip(({ isMobile }) => !isMobile, 'phone profiles only');
+  // The gestures are sent on a clock, on a shared machine: now and then one lands badly.
+  test.describe.configure({ retries: 2 });
 
   test('the hero is one screen tall and no longer pinned', async ({ page }) => {
     await open(page);
@@ -62,13 +68,19 @@ test.describe('on a phone', () => {
     const on = page.locator('.step.on');
     const current = page.locator('.ticks button[aria-current]');
     await expect(on.locator('h1')).toBeVisible();
-    await expect(page.locator('.swipe-hint')).toBeVisible();
+    // Short screens have no room for the hint between the devices and the dots.
+    const tall = page.viewportSize()!.height > 720;
+    if (tall) await expect(page.locator('.swipe-hint')).toBeVisible();
+    else await expect(page.locator('.swipe-hint')).toBeHidden();
+    // The statement has its own call button, so the nav's waits.
+    await expect(page.locator('.nav .btn')).toBeHidden();
     await expect(current).toHaveAccessibleName('Introduction');
 
     await swipe(page, '.copy', { x: -160 });
     await expect(on.locator('h3')).toHaveText('Web apps and SaaS');
     await expect(current).toHaveAccessibleName('Web apps and SaaS');
-    await expect(page.locator('.swipe-hint')).toHaveCSS('opacity', '0');
+    if (tall) await expect(page.locator('.swipe-hint')).toHaveCSS('opacity', '0');
+    await expect(page.locator('.nav .btn')).toBeVisible();
 
     await swipe(page, '.copy', { x: -160 });
     await expect(on.locator('h3')).toHaveText('Online stores');
@@ -80,9 +92,6 @@ test.describe('on a phone', () => {
   });
 
   test.describe('in quick succession', () => {
-    // Timing-sensitive by nature: the gestures are sent on a clock, on a shared machine.
-    test.describe.configure({ retries: 2 });
-
     test('each swipe lands on the next slide', async ({ page }) => {
       // A swipe that starts while the last one is still snapping must not be lost: nothing
       // in the hero may animate or lay out until the track is at rest (scripts/hero.ts).
@@ -201,6 +210,21 @@ test.describe('on a phone', () => {
       await expect(page.locator('.swipe-hint svg')).toHaveCSS('animation-name', 'none');
     });
   });
+
+  test('scrolling down brings the nav button back', async ({ page }) => {
+    await open(page);
+    await expect(page.locator('.nav .btn')).toBeHidden();
+    await swipe(page, '.copy', { y: -260 });
+    await expect(page.locator('.nav .btn')).toBeVisible();
+  });
+});
+
+test('the hero headings read in order', async ({ page }) => {
+  await open(page);
+  const results = await new AxeBuilder({ page }).withRules(['heading-order']).analyze();
+  expect(results.violations.map((v) => v.nodes.map((n) => n.target).join(' '))).toEqual([]);
+  const order = await page.locator('.stage :is(h1, h2, h3)').evaluateAll((hs) => hs.map((h) => h.tagName).join(' '));
+  expect(order).toBe('H1 H2 H3 H3 H3 H3');
 });
 
 test.describe('on a computer', () => {

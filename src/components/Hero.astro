@@ -44,7 +44,6 @@ const vars = (b: Box | null, p: string) => (b ? `--${p}cx:${b.cx};--${p}cy:${b.c
       }
     </div>
 
-    <h2 class="svc-heading" id="services">{pick(ui.hero.services, lang)}</h2>
     <div class="copy">
       <div class="step on">
         <h1 class="statement">
@@ -63,6 +62,8 @@ const vars = (b: Box | null, p: string) => (b ? `--${p}cx:${b.cx};--${p}cy:${b.c
           <a class="link see" href="#work">{pick(ui.hero.seeWork, lang)}</a>
         </div>
       </div>
+      {/* After the h1 and before the services' h3, so the headings read in order. */}
+      <h2 class="svc-heading" id="services">{pick(ui.hero.services, lang)}</h2>
       {
         services.map((s) => (
           <div class="step" inert>
@@ -261,7 +262,7 @@ const vars = (b: Box | null, p: string) => (b ? `--${p}cx:${b.cx};--${p}cy:${b.c
   .svc-heading {
     position: absolute;
     top: 16svh;
-    left: var(--pad);
+    left: 0;
     z-index: 3;
     font-family: var(--display);
     font-weight: 300;
@@ -396,8 +397,14 @@ const vars = (b: Box | null, p: string) => (b ? `--${p}cx:${b.cx};--${p}cy:${b.c
       padding-inline: 22px;
     }
 
+    /* Not shown, but still read as the heading of the services. */
     .svc-heading {
-      display: none;
+      top: 0;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
     }
 
     .step h3 {
@@ -597,9 +604,20 @@ const vars = (b: Box | null, p: string) => (b ? `--${p}cx:${b.cx};--${p}cy:${b.c
     }
   }
 
-  /* A phone on its side has no room for the heading above the slide. */
-  @media (max-height: 30rem) {
-    [data-mobile] .svc-heading {
+  /* The slides carry their own titles; the heading stays for screen readers only. */
+  [data-mobile] .svc-heading {
+    top: 0;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    transition: none;
+  }
+
+  /* Short phones: the devices reach down to where the hint would sit. */
+  @media (max-height: 720px) {
+    [data-mobile] .swipe-hint {
       display: none;
     }
   }
@@ -608,6 +626,12 @@ const vars = (b: Box | null, p: string) => (b ? `--${p}cx:${b.cx};--${p}cy:${b.c
     [data-mobile] .copy .step {
       align-content: start;
       padding: calc(env(safe-area-inset-top, 0px) + max(96px, 11svh)) var(--pad) 0;
+    }
+
+    /* A service says less than the statement: it sits in the middle of the room above the devices. */
+    [data-mobile] .copy .step ~ .step {
+      align-content: safe center;
+      padding-bottom: 50svh;
     }
   }
 

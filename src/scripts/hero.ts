@@ -166,6 +166,8 @@ function init(stageEl: HTMLElement) {
     if (!stageEl.classList.contains('gl-ready')) stills.go(step, shown, shown >= 0);
     live?.go(step, shown);
     shown = step;
+    // For the nav: on phones its call button stands down while the statement shows its own.
+    document.documentElement.toggleAttribute('data-statement', step === 0);
   }
 
   /** Pinned, only the current step can be reached; swiped, every slide is there to read. */
@@ -208,8 +210,10 @@ function init(stageEl: HTMLElement) {
   addEventListener('scroll', onScroll, { passive: true });
 
   // Phones: the copy is a scroll-snap track, and the slide in view is the step.
+  let switching: ReturnType<typeof setTimeout> | undefined;
   const slides = carousel(track, steps, dots, (i) => {
-    if (i !== step) go(i);
+    // While the layout flips to the track, half-laid-out slides report themselves in view.
+    if (i !== step && !switching) go(i);
   });
   const swiped = () => {
     if (!isMobile() || track.scrollLeft < 8) return;
@@ -221,6 +225,8 @@ function init(stageEl: HTMLElement) {
   go(isMobile() ? 0 : stepAt(pinProgress(pin)));
   onMobileChange((mobile) => {
     // Keep the step across a rotation: the track opens on it, or the pin picks it up from the scroll.
+    clearTimeout(switching);
+    switching = setTimeout(() => (switching = undefined), 250);
     if (mobile) slides.scrollTo(step, 'auto');
     else rested();
     const s = mobile ? step : stepAt(pinProgress(pin));
