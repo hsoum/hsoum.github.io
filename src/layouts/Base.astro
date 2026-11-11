@@ -7,6 +7,7 @@ import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import Consent from '../components/Consent.astro';
 import { GA_ID, SITE_URL } from '../data/site';
+import { MOBILE_EVENT, MOBILE_QUERY } from '../scripts/mobile';
 import { pick, type Lang } from '../i18n/lang';
 import { ui } from '../i18n/ui';
 
@@ -56,6 +57,22 @@ const [frPath, enPath] = lang === 'fr' ? [path, alternate] : [alternate, path];
         var t = localStorage.getItem('hs-theme');
         if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
       } catch (e) {}
+    </script>
+    <script is:inline define:vars={{ MOBILE_QUERY, MOBILE_EVENT }}>
+      // The one place that decides "mobile": see scripts/mobile.ts.
+      (function () {
+        var root = document.documentElement;
+        var mq = matchMedia(MOBILE_QUERY);
+        function sync() {
+          if (root.hasAttribute('data-mobile') === mq.matches) return;
+          root.toggleAttribute('data-mobile', mq.matches);
+          root.dispatchEvent(new Event(MOBILE_EVENT));
+        }
+        sync();
+        if (mq.addEventListener) mq.addEventListener('change', sync);
+        addEventListener('resize', sync);
+        addEventListener('orientationchange', sync);
+      })();
     </script>
     {
       redirect && (

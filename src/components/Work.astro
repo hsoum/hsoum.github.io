@@ -1,7 +1,8 @@
 ---
 /**
  * Stacking project cards: each one slides up over the last. Hovering a card plays its
- * screenshots and a "View" bubble follows the pointer.
+ * screenshots and a "View" bubble follows the pointer. On a phone (html[data-mobile])
+ * the cards sit side by side and are swiped, with dots underneath.
  */
 import { Image } from 'astro:assets';
 import { projects } from '../data/projects';
@@ -74,10 +75,25 @@ const { lang } = Astro.props;
       })
     }
   </ol>
+  <div class="work-dots" role="group" aria-label={pick(ui.work.title, lang)}>
+    {projects.map((p) => <button type="button" aria-label={p.name} />)}
+  </div>
   <div class="bubble" aria-hidden="true">{pick(ui.work.view, lang)}</div>
 </section>
 
 <script>
+  import { carousel } from '../scripts/mobile';
+
+  const cards = document.querySelector<HTMLElement>('.cards')!;
+  const dots = [...document.querySelectorAll<HTMLElement>('.work-dots button')];
+  const mark = (on: number) =>
+    dots.forEach((d, i) => {
+      if (i === on) d.setAttribute('aria-current', 'true');
+      else d.removeAttribute('aria-current');
+    });
+  mark(0);
+  carousel(cards, [...cards.querySelectorAll<HTMLElement>('.slot')], dots, mark);
+
   const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const FINE = matchMedia('(hover: hover) and (pointer: fine)').matches;
   const bubble = document.querySelector<HTMLElement>('.bubble')!;
@@ -321,6 +337,10 @@ const { lang } = Astro.props;
     scale: 1;
   }
 
+  .work-dots {
+    display: none;
+  }
+
   @media (max-width: 52rem) {
     .card {
       grid-template-columns: minmax(0, 1fr);
@@ -346,5 +366,108 @@ const { lang } = Astro.props;
       inset: 0;
       height: 100%;
     }
+  }
+
+  /* ---------- phones: the cards are swiped, not stacked ---------- */
+  /* Less air than the desktop's, so the cards and their dots fit one screen. */
+  :global([data-mobile]) .work {
+    padding-top: 12vh;
+  }
+
+  :global([data-mobile]) .work-title {
+    margin-bottom: 4vh;
+  }
+
+  :global([data-mobile]) .cards {
+    display: flex;
+    gap: 12px;
+    overflow: auto hidden;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: max(var(--pad), env(safe-area-inset-left, 0px)) max(var(--pad), env(safe-area-inset-right, 0px));
+    overscroll-behavior-x: contain;
+    touch-action: pan-x pan-y pinch-zoom;
+    scrollbar-width: none;
+  }
+
+  :global([data-mobile]) .cards::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Narrower than the screen, so the next card shows at the edge. */
+  :global([data-mobile]) .slot {
+    position: static;
+    display: flex;
+    flex: 0 0 85vw;
+    padding-bottom: 0;
+    scroll-snap-align: center;
+  }
+
+  /* As tall as its content, and every card as tall as the tallest. */
+  :global([data-mobile]) .card {
+    flex: 1;
+    grid-template-rows: auto 1fr;
+    height: auto;
+    min-height: 0;
+    box-shadow: 0 -1px 0 rgba(255, 255, 255, 0.08) inset;
+  }
+
+  :global([data-mobile]) .card-media {
+    order: -1;
+    aspect-ratio: 16 / 11;
+    max-height: 60svh;
+    margin-top: 12px;
+  }
+
+  :global([data-mobile]) .card-text {
+    padding-top: 8px;
+  }
+
+  :global([data-mobile]) .card-name {
+    font-size: clamp(2.25rem, 10vw, 3.25rem);
+  }
+
+  /* The hover slideshow never plays here: don't fetch its images. */
+  :global([data-mobile]) .slide {
+    display: none;
+  }
+
+  :global([data-mobile]) .card-cta {
+    display: block;
+  }
+
+  :global([data-mobile]) .work-dots {
+    display: flex;
+    justify-content: center;
+    margin-top: 4px;
+  }
+
+  .work-dots button {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--mist);
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .work-dots button::before {
+    content: "";
+    width: 38px;
+    height: 2px;
+    border-radius: 2px;
+    background: currentColor;
+    opacity: 0.85;
+    transform: scaleX(0.7);
+    transition: transform 0.3s ease, opacity 0.3s ease, background-color 0.3s ease;
+  }
+
+  .work-dots button[aria-current]::before {
+    background: var(--em);
+    opacity: 1;
+    transform: none;
   }
 </style>

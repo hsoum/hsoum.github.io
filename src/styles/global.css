@@ -100,6 +100,57 @@ body {
   transition: background-color 0.5s ease, color 0.5s ease;
 }
 
+/* Phones (see scripts/mobile.ts): the page itself only ever pans up and down. The swipe
+   tracks opt in to sideways panning on their own, so they never trap a vertical scroll. */
+[data-mobile] body {
+  touch-action: pan-y pinch-zoom;
+}
+
+/* Touch screens of any size: links and controls that stand alone get a 44px target. */
+@media (pointer: coarse) {
+  html :is(.links .link, .case-links .link, .concept .link, .back) {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+
+  html :is(.foot .links, .case-links) {
+    align-items: center;
+    row-gap: 0;
+  }
+
+  /* Inside a sentence the line keeps its height; only the touch area grows. */
+  html .channels .link {
+    padding-block: 12px;
+  }
+
+  html .nav .nav-name {
+    padding-block: 9px;
+  }
+
+  html .nav :is(.nav-lang, .nav-links a) {
+    min-width: 44px;
+  }
+
+  html .nav .nav-theme {
+    width: 44px;
+  }
+}
+
+@media (pointer: coarse) and (max-width: 40rem) {
+  html .nav .nav-name {
+    padding-block: 5px;
+  }
+}
+
+/* The statement has its own "book a call" right under the nav: one is enough until the
+   page moves or the hero is swiped on. The button keeps its place, so nothing shifts.
+   scripts/hero.ts sets the attribute once a swipe has come to rest: a change of style
+   that lands mid-swipe makes the track snap back. */
+html[data-mobile][data-statement] .nav:not(.scrolled) .btn {
+  visibility: hidden;
+}
+
 [hidden] {
   display: none !important;
 }

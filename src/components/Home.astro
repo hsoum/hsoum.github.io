@@ -19,7 +19,7 @@ const { lang } = Astro.props;
 <Base lang={lang} alternate={homePath(otherLang(lang))} redirect={lang === 'fr'}>
   <Hero lang={lang} />
   <div class="wrap logos-band">
-    <Logos lang={lang} />
+    <Logos lang={lang} decorative />
   </div>
   <Work lang={lang} />
   <Lab lang={lang} />
@@ -29,7 +29,8 @@ const { lang } = Astro.props;
 </Base>
 
 <style>
-  /* On tall screens the hero has no room for the logos; they follow it instead. */
+  /* On tall screens the hero has no room for the logos; they follow it instead.
+     This copy is for the eye only: the names are read from the hero's own list. */
   .logos-band {
     display: none;
     --logo-h: 24px;

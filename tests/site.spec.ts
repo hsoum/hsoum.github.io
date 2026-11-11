@@ -142,6 +142,9 @@ test.describe('theme', () => {
 });
 
 test.describe('hero', () => {
+  // Phones swipe through the steps instead: tests/mobile.spec.ts.
+  test.skip(({ isMobile }) => isMobile, 'the pinned scroll is for computers');
+
   test('scrolling steps through the four services', async ({ page }) => {
     // The steps don't depend on the live 3D, and compiling it without a GPU (CI) stalls the page for seconds.
     await page.route(/hero-3d|stage\./, (r) => r.abort());
@@ -157,7 +160,14 @@ test.describe('hero', () => {
       await scrollPin(page, f);
       await expect(on.locator('h3')).toHaveText(title);
     }
-    await expect(page.locator('.step:not(.on)').first()).toHaveAttribute('inert', '');
+    // Every step stays readable and reachable: Tab on a step out of sight scrolls to it.
+    await scrollPin(page, 0);
+    await page.locator('.ctas .see').focus();
+    await page.keyboard.press('Tab');
+    await expect(on.locator('h3')).toHaveText('Web apps and SaaS');
+    await expect(page.locator('.step.on .proof')).toBeFocused();
+    await page.keyboard.press('Tab');
+    await expect(on.locator('h3')).toHaveText('Online stores');
   });
 });
 

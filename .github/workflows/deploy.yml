@@ -30,7 +30,7 @@ jobs:
       - run: pnpm check
       - run: pnpm build
       - run: pnpm exec playwright install --with-deps chromium
-      - run: pnpm test -- --project=desktop
+      - run: pnpm test -- --project=desktop --project=phone --project=iphone
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
