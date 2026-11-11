@@ -142,6 +142,9 @@ test.describe('theme', () => {
 });
 
 test.describe('hero', () => {
+  // Phones swipe through the steps instead: tests/mobile.spec.ts.
+  test.skip(({ isMobile }) => isMobile, 'the pinned scroll is for computers');
+
   test('scrolling steps through the four services', async ({ page }) => {
     // The steps don't depend on the live 3D, and compiling it without a GPU (CI) stalls the page for seconds.
     await page.route(/hero-3d|stage\./, (r) => r.abort());

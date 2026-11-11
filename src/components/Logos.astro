@@ -6,9 +6,11 @@ import { ui } from '../i18n/ui';
 interface Props {
   lang: Lang;
   class?: string;
+  /** A second, visual-only copy: no names, hidden from assistive technology. */
+  decorative?: boolean;
 }
 
-const { lang, class: className } = Astro.props;
+const { lang, class: className, decorative = false } = Astro.props;
 const files = import.meta.glob<string>('../assets/logos/*.svg', { query: '?raw', import: 'default', eager: true });
 const svg = (name: string) => files[`../assets/logos/${name}.svg`].replace(/<title>[^<]*<\/title>/, '');
 
@@ -21,11 +23,11 @@ const logos = [
 ];
 ---
 
-<ul class:list={['logos', className]} aria-label={pick(ui.hero.clients, lang)}>
+<ul class:list={['logos', className]} aria-label={decorative ? undefined : pick(ui.hero.clients, lang)} aria-hidden={decorative ? 'true' : undefined}>
   {
     logos.map((l) => (
       <li style={`--s:${l.scale}`}>
-        <span class="sr-only">{l.name}</span>
+        {!decorative && <span class="sr-only">{l.name}</span>}
         <Fragment set:html={svg(l.file).replace('role="img"', 'aria-hidden="true" focusable="false"')} />
       </li>
     ))

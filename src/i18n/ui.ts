@@ -30,7 +30,6 @@ export const ui = {
   hero: {
     label: { fr: 'Présentation et services', en: 'Introduction and services' },
     statement: { fr: ['Livré vite.', 'Fait pour durer.'], en: ['Built to ship.', 'Built to last.'] },
-    statementText: { fr: 'Livré vite. Fait pour durer.', en: 'Built to ship. Built to last.' },
     who: { fr: 'Hichem Soumati, développeur freelance, web et mobile.', en: 'Hichem Soumati, freelance developer, web and mobile.' },
     what: {
       fr: 'Applications, boutiques en ligne et sites pour les startups et les entreprises.',
@@ -39,6 +38,8 @@ export const ui = {
     seeWork: { fr: 'Voir les réalisations', en: 'See the work' },
     services: { fr: 'Ce que je construis', en: 'What I build' },
     clients: { fr: 'Clients', en: 'Clients' },
+    intro: { fr: 'Présentation', en: 'Introduction' },
+    swipe: { fr: 'Glissez', en: 'Swipe' },
   },
   work: {
     title: { fr: 'Réalisations', en: 'Selected work' },

@@ -8,7 +8,7 @@ Studio Faber, Hichem Soumati's portfolio site, in French (`/`) and English (`/en
 pnpm install
 pnpm dev                 # http://localhost:4321
 pnpm check && pnpm build # type-check, then build to dist/
-pnpm test                # Playwright: both languages, content rules, hero, theme, consent, reduced motion, axe in both themes
+pnpm test                # Playwright: both languages, content rules, hero, swiping on phones, theme, consent, reduced motion, axe in both themes
 ```
 
 `dev`, `check` and `build` first run `scripts/fonts.mjs`, which downloads the display font if it is missing (see below). The first run needs an internet connection.
@@ -23,7 +23,7 @@ pnpm test                # Playwright: both languages, content rules, hero, them
 Every text has `fr` and `en`.
 
 - Projects and their case studies: `src/data/projects.ts`.
-- The four services the hero steps through (title, one line, delivery promise, proof link): `src/data/services.ts`. Their order is the order of the scroll steps.
+- The four services the hero steps through (title, one line, delivery promise, proof link): `src/data/services.ts`. Their order is the order of the scroll steps (the slides, on a phone).
 - The numbers strip before the contact section: `src/data/numbers.ts`. Every figure must be checkable on the project it links to.
 - Design explorations: `src/data/lab.ts`. Static exports go in `public/lab/<slug>/`, recordings in `public/media/lab-<slug>.mp4`.
 - Testimonials: `src/data/testimonials.ts`. Add a quote only once the client has approved it in writing, word for word, in both languages. While the list is empty, the section does not render.
@@ -35,6 +35,14 @@ Every text has `fr` and `en`.
 - Screenshots: `src/assets/shots/`, referenced by file name.
 
 French typography (non-breaking spaces before `: ; ! ?`) is applied automatically by `pick()` in `src/i18n/lang.ts`. Write normal spaces.
+
+## Phones swipe
+
+On a narrow touch screen, `(max-width: 52rem) and (pointer: coarse)`, the hero is one screen tall and its five steps are swiped sideways, and the project cards are a swipe carousel instead of a stack. Everything else, including a narrow window with a mouse, keeps the pinned scroll and the stacking cards.
+
+- The query lives in `src/scripts/mobile.ts`. An inline script in `src/layouts/Base.astro` evaluates it (and again on resize and rotation) and mirrors it as `html[data-mobile]`. CSS keys off that attribute; scripts call `isMobile()`.
+- Both carousels are native scroll-snap tracks; `carousel()` in the same file only adds the dots and reports the slide in view.
+- While a swipe is settling, nothing may animate or change layout around the track, or Chromium snaps back to the slide it was leaving. That is why the hero's devices wait for the track to rest before they turn (`src/scripts/hero.ts`), and why the tracks have no touch listeners.
 
 ## Hero images
 

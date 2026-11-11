@@ -16,5 +16,7 @@ export default defineConfig({
   projects: [
     { name: 'desktop', use: { ...devices['Desktop Chrome'] } },
     { name: 'phone', use: { ...devices['Pixel 7'] } },
+    // An iPhone's screen, touch and user agent, on Chromium: the only engine CI installs.
+    { name: 'iphone', use: { ...devices['iPhone 13'], defaultBrowserType: 'chromium', browserName: 'chromium' } },
   ],
 });
