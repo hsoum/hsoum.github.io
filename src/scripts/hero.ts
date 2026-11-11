@@ -200,6 +200,7 @@ function init(stageEl: HTMLElement) {
       else dots[i]?.removeAttribute('aria-current');
     });
     logos?.classList.toggle('off', next > 0);
+    stageEl.classList.toggle('stepped', next > 0);
     turn();
   }
 

@@ -93,6 +93,13 @@ const vars = (b: Box | null, p: string) => (b ? `--${p}cx:${b.cx};--${p}cy:${b.c
         <path d="M1 5h16M13 1l4 4-4 4" />
       </svg>
     </p>
+    {/* With a mouse: the first screen says there is more below. */}
+    <p class="scroll-hint" aria-hidden="true">
+      {pick(ui.hero.scroll, lang)}
+      <svg width="10" height="18" viewBox="0 0 10 18" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M5 1v16M1 13l4 4 4-4" />
+      </svg>
+    </p>
     <Logos lang={lang} class="hero-logos" />
   </div>
 </section>
@@ -333,6 +340,43 @@ const vars = (b: Box | null, p: string) => (b ? `--${p}cx:${b.cx};--${p}cy:${b.c
   .ticks li.on {
     height: 38px;
     background: var(--em);
+  }
+
+  /* In the corner the logos leave free, on their line. */
+  .scroll-hint {
+    position: absolute;
+    right: max(var(--pad), env(safe-area-inset-right, 0px));
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 4vh);
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--mist);
+    font-size: 0.8125rem;
+    letter-spacing: 0.04em;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+  }
+
+  /* It leaves with the first step, like the logos. */
+  .stepped .scroll-hint {
+    opacity: 0;
+  }
+
+  [data-mobile] .scroll-hint {
+    display: none;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .scroll-hint svg {
+      animation: scroll-nudge 1.8s ease-in-out infinite;
+    }
+  }
+
+  @keyframes scroll-nudge {
+    50% {
+      transform: translateY(4px);
+    }
   }
 
   /* The first mark stands for the statement, and the buttons are the phone's dots. */

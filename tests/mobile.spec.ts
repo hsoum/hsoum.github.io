@@ -55,6 +55,7 @@ test.describe('on a phone', () => {
   test('the hero is one screen tall and no longer pinned', async ({ page }) => {
     await open(page);
     await expect(page.locator('html')).toHaveAttribute('data-mobile', '');
+    await expect(page.locator('.scroll-hint')).toBeHidden();
     const hero = await page.evaluate(() => {
       const pin = document.querySelector<HTMLElement>('.pin')!;
       return { ratio: pin.offsetHeight / innerHeight, position: getComputedStyle(pin.querySelector('.stage')!).position };
@@ -250,6 +251,13 @@ test.describe('on a computer', () => {
     expect(layout.pin).toBeCloseTo(5.6, 1);
     expect(layout).toMatchObject({ stage: 'sticky', track: 'visible', slot: 'sticky', cards: 'grid', dots: 'none', hint: 'none', marks: 4, buttons: 0 });
     await expect(page.locator('.ticks')).toHaveAttribute('aria-hidden', 'true');
+    // The first screen says there is more below; the cue leaves with the first step.
+    await expect(page.locator('.scroll-hint')).toBeVisible();
+    await expect(page.locator('.scroll-hint')).toHaveCSS('opacity', '1');
+    await page.evaluate(() => { const pin = document.querySelector<HTMLElement>('.pin')!; scrollTo(0, (pin.offsetHeight - innerHeight) * 0.22); });
+    await expect(page.locator('.scroll-hint')).toHaveCSS('opacity', '0');
+    // The pointer stays visible over a card.
+    expect(await page.evaluate(() => getComputedStyle(document.querySelector('.card-link')!).cursor)).toBe('pointer');
   });
 
   test('a narrow window with a mouse keeps the desktop behaviour', async ({ page }) => {

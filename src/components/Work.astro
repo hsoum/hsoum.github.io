@@ -1,7 +1,7 @@
 ---
 /**
  * Stacking project cards: each one slides up over the last. Hovering a card plays its
- * screenshots and a "View" bubble follows the pointer. On a phone (html[data-mobile])
+ * screenshots and a "View" bubble follows beside the pointer. On a phone (html[data-mobile])
  * the cards sit side by side and are swiped, with dots underneath.
  */
 import { Image } from 'astro:assets';
@@ -188,10 +188,6 @@ const { lang } = Astro.props;
     box-shadow: 0 -1px 0 rgba(255, 255, 255, 0.08) inset, 0 -30px 60px -40px rgba(0, 0, 0, 0.6);
   }
 
-  .card.hover {
-    cursor: none;
-  }
-
   .card-text {
     display: flex;
     flex-direction: column;
@@ -315,8 +311,9 @@ const { lang } = Astro.props;
   .bubble {
     position: fixed;
     z-index: 30;
-    top: -44px;
-    left: -44px;
+    /* Beside the pointer, which stays visible: the bubble labels it, it does not replace it. */
+    top: 14px;
+    left: 14px;
     display: grid;
     place-items: center;
     width: 88px;
@@ -356,10 +353,6 @@ const { lang } = Astro.props;
 
     .card-name {
       font-size: clamp(2.5rem, 11vw, 3.75rem);
-    }
-
-    .card-cta {
-      display: none;
     }
 
     .cover {
@@ -429,10 +422,6 @@ const { lang } = Astro.props;
   /* The hover slideshow never plays here: don't fetch its images. */
   :global([data-mobile]) .slide {
     display: none;
-  }
-
-  :global([data-mobile]) .card-cta {
-    display: block;
   }
 
   :global([data-mobile]) .work-dots {

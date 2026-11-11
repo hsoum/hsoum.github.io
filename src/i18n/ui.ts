@@ -40,6 +40,7 @@ export const ui = {
     clients: { fr: 'Clients', en: 'Clients' },
     intro: { fr: 'Présentation', en: 'Introduction' },
     swipe: { fr: 'Glissez', en: 'Swipe' },
+    scroll: { fr: 'Défilez', en: 'Scroll' },
   },
   work: {
     title: { fr: 'Réalisations', en: 'Selected work' },
